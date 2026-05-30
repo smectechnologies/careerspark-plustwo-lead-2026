@@ -1,0 +1,559 @@
+---
+/**
+ * PassedForm.astro
+ * Two-step intake for Plus Two Passed students.
+ *
+ * Step 1 submits personal details to sheet.
+ * Step 2 collects the 3 highest-graded subjects, then shows courses.
+ */
+---
+
+<div class="form-card" id="pf-card">
+  <div class="form-card__header">
+    <span class="form-card__badge">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+      </svg>
+      Plus Two Passed
+    </span>
+    <p class="form-card__hint">Submit your details, then add your top subjects</p>
+  </div>
+
+  <form id="passed-form" novalidate aria-label="Plus Two Passed intake form" class="pf-form">
+    <div class="pf-row">
+      <div class="form-field">
+        <label class="form-label" for="passed-name">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Name<span aria-hidden="true"> *</span>
+        </label>
+        <input id="passed-name" name="passed-name" type="text" class="form-input"
+          placeholder="Full name" required aria-required="true"
+          aria-describedby="passed-name-error" autocomplete="name"/>
+        <span id="passed-name-error" role="alert" class="form-error"></span>
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="passed-city">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          City<span aria-hidden="true"> *</span>
+        </label>
+        <input id="passed-city" name="passed-city" type="text" class="form-input"
+          placeholder="Your city" required aria-required="true"
+          aria-describedby="passed-city-error" autocomplete="address-level2"/>
+        <span id="passed-city-error" role="alert" class="form-error"></span>
+      </div>
+    </div>
+
+    <div class="pf-row">
+      <div class="form-field">
+        <label class="form-label" for="passed-phone">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          Phone<span aria-hidden="true"> *</span>
+        </label>
+        <input id="passed-phone" name="passed-phone" type="tel" class="form-input"
+          placeholder="10-digit number" required aria-required="true"
+          aria-describedby="passed-phone-error" autocomplete="tel" inputmode="numeric"/>
+        <span id="passed-phone-error" role="alert" class="form-error"></span>
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="passed-email">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Email<span aria-hidden="true"> *</span>
+        </label>
+        <input id="passed-email" name="passed-email" type="email" class="form-input"
+          placeholder="you@email.com" required aria-required="true"
+          aria-describedby="passed-email-error" autocomplete="email" inputmode="email"/>
+        <span id="passed-email-error" role="alert" class="form-error"></span>
+      </div>
+    </div>
+
+    <div class="pf-row">
+      <div class="form-field">
+        <label class="form-label" for="passed-stream">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          Stream<span aria-hidden="true"> *</span>
+        </label>
+        <div class="select-wrapper">
+          <select id="passed-stream" name="passed-stream" class="form-select"
+            required aria-required="true" aria-describedby="passed-stream-error">
+            <option value="" disabled selected>Select stream</option>
+            <option value="Science">Science</option>
+            <option value="Commerce">Commerce</option>
+            <option value="Humanities">Humanities</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Biology Science">Biology Science</option>
+          </select>
+        </div>
+        <span id="passed-stream-error" role="alert" class="form-error"></span>
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="passed-percentage">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          Score %<span aria-hidden="true"> *</span>
+        </label>
+        <input id="passed-percentage" name="passed-percentage" type="number" class="form-input"
+          placeholder="e.g. 75" min="0" max="100" required aria-required="true"
+          aria-describedby="passed-percentage-error" inputmode="decimal"/>
+        <span id="passed-percentage-error" role="alert" class="form-error"></span>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-gradient pf-submit">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      Submit Details
+    </button>
+
+    <div id="passed-form-toast" role="alert" aria-live="assertive" class="form-toast" hidden>
+      Something went wrong. Please try again.
+    </div>
+  </form>
+</div>
+
+<div class="form-card pf-step2-card" id="pf-step2" hidden>
+  <div class="form-card__header">
+    <span class="form-card__badge pf-badge--step2">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+      </svg>
+      Highest Grade Subjects
+    </span>
+    <p class="form-card__hint">Enter your three strongest subjects</p>
+  </div>
+
+  <div class="subjects-list" role="group" aria-label="Enter your top 3 subjects">
+    <div class="subject-col">
+      <label class="subject-col__label" for="subject-1">
+        <span class="subject-col__rank rank--1">1st</span> Highest
+      </label>
+      <input id="subject-1" type="text" class="form-input subject-input" placeholder="Subject name" autocomplete="off" />
+    </div>
+
+    <div class="subject-col">
+      <label class="subject-col__label" for="subject-2">
+        <span class="subject-col__rank rank--2">2nd</span> Highest
+      </label>
+      <input id="subject-2" type="text" class="form-input subject-input" placeholder="Subject name" autocomplete="off" />
+    </div>
+
+    <div class="subject-col">
+      <label class="subject-col__label" for="subject-3">
+        <span class="subject-col__rank rank--3">3rd</span> Highest
+      </label>
+      <input id="subject-3" type="text" class="form-input subject-input" placeholder="Subject name" autocomplete="off" />
+    </div>
+  </div>
+
+  <span id="subject-error" role="alert" class="form-error subject-error"></span>
+
+  <div class="pf-step2-actions">
+    <button type="button" class="btn-back" id="pf-back-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back
+    </button>
+    <button type="button" class="btn-gradient pf-confirm-btn" id="pf-confirm-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      Show My Courses
+    </button>
+  </div>
+</div>
+
+<style>
+  /* ── Glass card ───────────────────────────────────────────── */
+  .form-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: 18px;
+    padding: 12px 12px 14px;
+    box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+
+  .form-card__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--glass-border);
+  }
+
+  .form-card__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 12px;
+    background: rgba(0, 255, 240, 0.10);
+    border: 1px solid rgba(0, 255, 240, 0.32);
+    border-radius: 9999px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: #00FFF0;
+    text-transform: uppercase;
+  }
+
+  .form-card__hint {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    text-align: center;
+    margin: 0;
+  }
+
+  .pf-badge--step2 {
+    background: rgba(0, 191, 255, 0.12);
+    border-color: rgba(0, 191, 255, 0.35);
+    color: #00BFFF;
+  }
+
+  /* ── Step 1 form ──────────────────────────────────────────── */
+  .pf-form { display: flex; flex-direction: column; gap: 0; }
+
+  .pf-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .pf-form .form-field { margin-bottom: 6px; }
+
+  .select-wrapper { position: relative; }
+
+  .select-wrapper::after {
+    content: '';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0; height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid var(--color-text-muted);
+    pointer-events: none;
+  }
+
+  .select-wrapper .form-select { padding-right: 28px; }
+
+  .form-select option {
+    background-color: #111118;
+    color: var(--color-text);
+  }
+
+  .pf-submit {
+    width: 100%;
+    margin-top: 8px;
+    font-size: var(--font-size-sm);
+    padding: 12px var(--space-lg);
+    border-radius: 12px;
+    letter-spacing: 0.03em;
+  }
+
+  .pf-submit:focus-visible {
+    outline: 2px solid var(--color-secondary);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 4px rgba(0, 245, 212, 0.2);
+  }
+
+  .pf-submit:disabled,
+  .pf-confirm-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+
+  @keyframes pf-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .form-toast {
+    margin-top: 6px;
+    padding: 7px 12px;
+    background: rgba(255, 45, 120, 0.1);
+    border: 1px solid rgba(255, 45, 120, 0.35);
+    border-radius: 8px;
+    color: var(--color-accent);
+    font-size: var(--font-size-xs);
+    text-align: center;
+    font-weight: 500;
+  }
+
+  .pf-step2-card[hidden] { display: none; }
+
+  .subjects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .subject-col {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .subject-col__label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    color: var(--color-text-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .subject-col__rank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    font-size: 0.6rem;
+    font-weight: 900;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .rank--1 { background: linear-gradient(135deg, #FFE600, #FF9500); box-shadow: 0 0 8px rgba(255,230,0,0.5); }
+  .rank--2 { background: linear-gradient(135deg, #C0C0C0, #8B8BA7); box-shadow: 0 0 8px rgba(192,192,192,0.4); }
+  .rank--3 { background: linear-gradient(135deg, #CD7F32, #8B4513); box-shadow: 0 0 8px rgba(205,127,50,0.4); }
+
+  .subject-error {
+    display: block;
+    min-height: 18px;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  .pf-step2-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 11px 14px;
+    background: var(--glass-bg-2);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    color: var(--color-text-muted);
+    font-family: var(--font-sans);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 200ms ease, color 200ms ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .btn-back:hover {
+    border-color: var(--color-primary);
+    color: var(--color-text);
+  }
+
+  .pf-confirm-btn {
+    flex: 1;
+    font-size: var(--font-size-sm);
+    padding: 12px var(--space-lg);
+    border-radius: 12px;
+    letter-spacing: 0.03em;
+  }
+
+  /* ── Desktop ──────────────────────────────────────────────── */
+  @media (min-width: 431px) {
+    .form-card { padding: 20px 20px 24px; border-radius: 22px; }
+    .form-card__header { gap: 5px; margin-bottom: 16px; padding-bottom: 12px; }
+    .form-card__badge { font-size: 0.72rem; padding: 4px 14px; }
+    .form-card__hint { font-size: var(--font-size-sm); }
+    .pf-row { gap: 12px; }
+    .pf-form .form-field { margin-bottom: 10px; }
+    .pf-submit { padding: 14px var(--space-xl); font-size: var(--font-size-base); margin-top: 12px; }
+    .subjects-list { gap: 12px; margin-bottom: 10px; }
+    .pf-confirm-btn { padding: 14px var(--space-xl); font-size: var(--font-size-base); }
+  }
+</style>
+
+<script>
+  import { validateName, validatePhone, validateEmail, validatePercentage } from '../../lib/validation';
+  import { buildPayload, submitLead } from '../../lib/leadService';
+  import { getRecommendations } from '../../lib/recommendationEngine';
+  import type { Stream } from '../../lib/recommendationEngine';
+
+  type CourseRecommendation = ReturnType<typeof getRecommendations>[number];
+
+  // ── DOM refs ──────────────────────────────────────────────────────────────
+  const step1 = document.getElementById('pf-card') as HTMLDivElement;
+  const step2 = document.getElementById('pf-step2') as HTMLDivElement;
+  const form  = document.getElementById('passed-form') as HTMLFormElement;
+  const toast = document.getElementById('passed-form-toast') as HTMLDivElement;
+  const backBtn = document.getElementById('pf-back-btn') as HTMLButtonElement;
+  const confirmBtn = document.getElementById('pf-confirm-btn') as HTMLButtonElement;
+  const sub1 = document.getElementById('subject-1') as HTMLInputElement;
+  const sub2 = document.getElementById('subject-2') as HTMLInputElement;
+  const sub3 = document.getElementById('subject-3') as HTMLInputElement;
+  const subjectError = document.getElementById('subject-error') as HTMLSpanElement;
+
+  const nameInput       = document.getElementById('passed-name')       as HTMLInputElement;
+  const cityInput       = document.getElementById('passed-city')       as HTMLInputElement;
+  const phoneInput      = document.getElementById('passed-phone')      as HTMLInputElement;
+  const emailInput      = document.getElementById('passed-email')      as HTMLInputElement;
+  const streamSelect    = document.getElementById('passed-stream')     as HTMLSelectElement;
+  const percentageInput = document.getElementById('passed-percentage') as HTMLInputElement;
+
+  const nameError       = document.getElementById('passed-name-error')       as HTMLSpanElement;
+  const cityError       = document.getElementById('passed-city-error')       as HTMLSpanElement;
+  const phoneError      = document.getElementById('passed-phone-error')      as HTMLSpanElement;
+  const emailError      = document.getElementById('passed-email-error')      as HTMLSpanElement;
+  const streamError     = document.getElementById('passed-stream-error')     as HTMLSpanElement;
+  const percentageError = document.getElementById('passed-percentage-error') as HTMLSpanElement;
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
+  function setError(input: HTMLInputElement | HTMLSelectElement, span: HTMLSpanElement, msg: string | null): boolean {
+    if (msg) {
+      span.textContent = msg;
+      input.classList.add(input.tagName === 'SELECT' ? 'form-select--error' : 'form-input--error');
+      input.setAttribute('aria-invalid', 'true');
+      return false;
+    }
+    span.textContent = '';
+    input.classList.remove('form-input--error', 'form-select--error');
+    input.removeAttribute('aria-invalid');
+    return true;
+  }
+
+  const validateStream = (v: string) =>
+    ['Science','Commerce','Humanities','Computer Science','Biology Science'].includes(v)
+      ? null : 'Please select your stream.';
+
+  const validateCity = (v: string) => v.trim().length > 0 ? null : 'City is required.';
+
+  let savedRecommendations: CourseRecommendation[] = [];
+  let savedStream: Stream | null = null;
+  let savedPhone = '';
+
+  const submitBtn = form.querySelector<HTMLButtonElement>('.pf-submit');
+
+  function setStep1Loading(loading: boolean): void {
+    if (!submitBtn) return;
+    if (loading) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="animation:pf-spin 700ms linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Submitting...`;
+    } else {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Submit Details`;
+    }
+  }
+
+  function setStep2Loading(loading: boolean): void {
+    if (loading) {
+      confirmBtn.disabled = true;
+      confirmBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="animation:pf-spin 700ms linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Loading...`;
+    } else {
+      confirmBtn.disabled = false;
+      confirmBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Show My Courses`;
+    }
+  }
+
+  function restoreSubmitButton(): void {
+    setStep1Loading(false);
+  }
+
+  // ── Step 1 submit: store sheet row, then show subject form ────────────────
+  form.addEventListener('submit', async (e: Event) => {
+    e.preventDefault();
+    toast.hidden = true;
+
+    const name = nameInput.value, city = cityInput.value, phone = phoneInput.value;
+    const email = emailInput.value, stream = streamSelect.value, percentage = percentageInput.value;
+
+    const ok = [
+      setError(nameInput,       nameError,       validateName(name)),
+      setError(cityInput,       cityError,       validateCity(city)),
+      setError(phoneInput,      phoneError,      validatePhone(phone)),
+      setError(emailInput,      emailError,      validateEmail(email)),
+      setError(streamSelect,    streamError,     validateStream(stream)),
+      setError(percentageInput, percentageError, validatePercentage(percentage)),
+    ].every(Boolean);
+
+    if (!ok) {
+      ([nameInput, cityInput, phoneInput, emailInput, streamSelect, percentageInput] as HTMLElement[])
+        .find(el => el.getAttribute('aria-invalid') === 'true')?.focus();
+      return;
+    }
+
+    setStep1Loading(true);
+
+    try {
+      const recommendations = getRecommendations('passed', stream as Stream);
+      const payload = buildPayload(
+        {
+          name: nameInput.value,
+          city: cityInput.value,
+          phone: phoneInput.value,
+          email: emailInput.value,
+          percentage: percentageInput.value,
+        },
+        'passed',
+        stream as Stream,
+        recommendations
+      );
+
+      await submitLead(payload);
+
+      savedRecommendations = recommendations;
+      savedStream = stream as Stream;
+      savedPhone = phoneInput.value;
+
+      step1.hidden = true;
+      step2.hidden = false;
+      window.dispatchEvent(new CustomEvent('passed-subject-step-active'));
+      step2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch {
+      toast.hidden = false;
+      restoreSubmitButton();
+    }
+  });
+
+  backBtn.addEventListener('click', () => {
+    step2.hidden = true;
+    step1.hidden = false;
+    window.dispatchEvent(new CustomEvent('passed-subject-step-back'));
+    restoreSubmitButton();
+    step1.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  confirmBtn.addEventListener('click', () => {
+    subjectError.textContent = '';
+    const selectedSubjects = [sub1.value, sub2.value, sub3.value].map(subject => subject.trim());
+    const uniqueSubjects = new Set(selectedSubjects.map(subject => subject.toLowerCase()));
+
+    if (selectedSubjects.some(subject => subject.length === 0)) {
+      subjectError.textContent = 'Please enter your top 3 subjects.';
+      return;
+    }
+
+    if (uniqueSubjects.size < 3) {
+      subjectError.textContent = 'Please choose three different subjects.';
+      return;
+    }
+
+    if (!savedStream) return;
+
+    setStep2Loading(true);
+
+    window.dispatchEvent(new CustomEvent('show-success-screen', {
+      detail: {
+        result: 'passed',
+        stream: savedStream,
+        recommendations: savedRecommendations,
+        phone: savedPhone,
+        topSubjects: selectedSubjects,
+      },
+    }));
+  });
+</script>

@@ -1,0 +1,71 @@
+---
+/**
+ * MobileShell.astro
+ *
+ * Renders a centred phone-frame container on desktop viewports (> 430px)
+ * and full-screen on mobile viewports (≤ 430px).
+ *
+ * Requirements: 1.1, 1.2, 1.3
+ */
+---
+
+<div class="shell-viewport" role="main">
+  <div class="shell-frame">
+    <slot />
+  </div>
+</div>
+
+<style>
+  /* ── Outer viewport wrapper ─────────────────────────────────
+     Fills the full browser viewport and centres the shell
+     horizontally and vertically on desktop.
+  ──────────────────────────────────────────────────────────── */
+  .shell-viewport {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-bg);
+  }
+
+  /* ── Phone-frame shell ──────────────────────────────────────
+     Default (mobile-first): full-screen, no frame styling.
+     Requirement 1.3 – ≤ 430px renders full-screen.
+  ──────────────────────────────────────────────────────────── */
+  .shell-frame {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--color-bg);
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ── Desktop phone-frame ────────────────────────────────────
+     On viewports wider than 430px, expand to 480px with more
+     breathing room, bigger border-radius, stronger glow.
+  ──────────────────────────────────────────────────────────── */
+  @media (min-width: 431px) {
+    .shell-viewport {
+      background:
+        radial-gradient(ellipse at 25% 15%, rgba(0, 191, 255, 0.22) 0%, transparent 50%),
+        radial-gradient(ellipse at 75% 85%, rgba(0, 255, 240, 0.14) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(125, 255, 114, 0.06) 0%, transparent 60%),
+        var(--color-bg);
+    }
+
+    .shell-frame {
+      width: 480px;
+      max-width: 480px;
+      height: 100vh;
+      min-height: unset;
+      border-radius: 36px;
+      border: 1px solid rgba(0, 191, 255, 0.35);
+      box-shadow:
+        var(--shadow-lg),
+        var(--glow-primary),
+        0 0 90px rgba(0, 191, 255, 0.12);
+      overflow: hidden;
+    }
+  }
+</style>

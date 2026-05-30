@@ -1,0 +1,388 @@
+---
+/**
+ * FailedForm.astro
+ * Intake form — Plus Two Not Cleared.
+ * Dark mode only. SVG icons. Glassmorphism card.
+ * Requirements: 4.1–4.8
+ */
+---
+
+<div class="form-card">
+
+  <div class="form-card__header">
+    <span class="form-card__badge">
+      <!-- clipboard -->
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+        <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+      </svg>
+      Plus Two Not Cleared
+    </span>
+    <p class="form-card__hint">We'll find the best path forward for you</p>
+  </div>
+
+  <form id="failed-form" novalidate aria-label="Failed student intake form" class="ff-form">
+
+    <!-- Row 1: Name + City -->
+    <div class="ff-row">
+      <div class="form-field">
+        <label class="form-label" for="failed-name">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Name<span aria-hidden="true"> *</span>
+        </label>
+        <input id="failed-name" name="failed-name" type="text" class="form-input"
+          placeholder="Full name" required aria-required="true"
+          aria-describedby="failed-name-error" autocomplete="name"/>
+        <span id="failed-name-error" role="alert" class="form-error"></span>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label" for="failed-city">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          City<span aria-hidden="true"> *</span>
+        </label>
+        <input id="failed-city" name="failed-city" type="text" class="form-input"
+          placeholder="Your city" required aria-required="true"
+          aria-describedby="failed-city-error" autocomplete="address-level2"/>
+        <span id="failed-city-error" role="alert" class="form-error"></span>
+      </div>
+    </div>
+
+    <!-- Row 2: Phone + Email -->
+    <div class="ff-row">
+      <div class="form-field">
+        <label class="form-label" for="failed-phone">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          Phone<span aria-hidden="true"> *</span>
+        </label>
+        <input id="failed-phone" name="failed-phone" type="tel" class="form-input"
+          placeholder="10-digit number" required aria-required="true"
+          aria-describedby="failed-phone-error" autocomplete="tel" inputmode="numeric"/>
+        <span id="failed-phone-error" role="alert" class="form-error"></span>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label" for="failed-email">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Email<span aria-hidden="true"> *</span>
+        </label>
+        <input id="failed-email" name="failed-email" type="email" class="form-input"
+          placeholder="you@email.com" required aria-required="true"
+          aria-describedby="failed-email-error" autocomplete="email" inputmode="email"/>
+        <span id="failed-email-error" role="alert" class="form-error"></span>
+      </div>
+    </div>
+
+    <!-- Row 3: SSLC % + Stream -->
+    <div class="ff-row">
+      <div class="form-field">
+        <label class="form-label" for="failed-percentage">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          SSLC %<span aria-hidden="true"> *</span>
+        </label>
+        <input id="failed-percentage" name="failed-percentage" type="number" class="form-input"
+          placeholder="e.g. 72" min="0" max="100" step="any" required aria-required="true"
+          aria-describedby="failed-percentage-error" inputmode="decimal"/>
+        <span id="failed-percentage-error" role="alert" class="form-error"></span>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label" for="failed-stream">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          Stream<span aria-hidden="true"> *</span>
+        </label>
+        <div class="select-wrapper">
+          <select id="failed-stream" name="failed-stream" class="form-select"
+            required aria-required="true" aria-describedby="failed-stream-error">
+            <option value="" disabled selected>Select stream</option>
+            <option value="Science">Science</option>
+            <option value="Commerce">Commerce</option>
+            <option value="Humanities">Humanities</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Biology Science">Biology Science</option>
+          </select>
+        </div>
+        <span id="failed-stream-error" role="alert" class="form-error"></span>
+      </div>
+    </div>
+
+    <div id="failed-submit-error" role="alert" aria-live="polite" class="submit-error" style="display:none;">
+      Something went wrong. Please try again.
+    </div>
+
+    <!-- Submit -->
+    <button type="submit" class="btn-gradient ff-submit">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      Get My Recommendations
+    </button>
+
+  </form>
+</div>
+
+<style>
+  /* ── Glass card ───────────────────────────────────────────── */
+  .form-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: 18px;
+    padding: 12px 12px 14px;
+    box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+
+  /* ── Header ───────────────────────────────────────────────── */
+  .form-card__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--glass-border);
+  }
+
+  .form-card__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 12px;
+    background: rgba(125, 255, 114, 0.10);
+    border: 1px solid rgba(125, 255, 114, 0.32);
+    border-radius: 9999px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: #7DFF72;
+    text-transform: uppercase;
+  }
+
+  .form-card__hint {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    text-align: center;
+    margin: 0;
+  }
+
+  /* ── Form ─────────────────────────────────────────────────── */
+  .ff-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .ff-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .ff-form .form-field {
+    margin-bottom: 6px;
+  }
+
+  /* ── Select wrapper ───────────────────────────────────────── */
+  .select-wrapper {
+    position: relative;
+  }
+
+  .select-wrapper::after {
+    content: '';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid var(--color-text-muted);
+    pointer-events: none;
+  }
+
+  .select-wrapper .form-select { padding-right: 28px; }
+
+  .form-select option {
+    background-color: #111118;
+    color: var(--color-text);
+  }
+
+  /* ── Submit ───────────────────────────────────────────────── */
+  .ff-submit {
+    width: 100%;
+    margin-top: 8px;
+    font-size: var(--font-size-sm);
+    padding: 12px var(--space-lg);
+    border-radius: 12px;
+    letter-spacing: 0.03em;
+  }
+
+  .ff-submit:focus-visible {
+    outline: 2px solid var(--color-secondary);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 4px rgba(0, 245, 212, 0.2);
+  }
+
+  .ff-submit:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+
+  @keyframes ff-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* ── Error toast ──────────────────────────────────────────── */
+  .submit-error {
+    background: rgba(255, 45, 120, 0.08);
+    border: 1px solid rgba(255, 45, 120, 0.35);
+    border-radius: 8px;
+    color: var(--color-accent);
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    padding: 7px 12px;
+    margin-bottom: 4px;
+    text-align: center;
+  }
+
+  /* ── Desktop: more breathing room ────────────────────────── */
+  @media (min-width: 431px) {
+    .form-card {
+      padding: 20px 20px 24px;
+      border-radius: 22px;
+    }
+    .form-card__header {
+      gap: 5px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+    }
+    .form-card__badge {
+      font-size: 0.72rem;
+      padding: 4px 14px;
+    }
+    .form-card__hint {
+      font-size: var(--font-size-sm);
+    }
+    .ff-row {
+      gap: 12px;
+    }
+    .ff-form .form-field {
+      margin-bottom: 10px;
+    }
+    .ff-submit {
+      padding: 14px var(--space-xl);
+      font-size: var(--font-size-base);
+      margin-top: 12px;
+    }
+  }
+</style>
+
+<script>
+  import { validateName, validatePhone, validateEmail, validatePercentage } from '../../lib/validation';
+  import { buildPayload, submitLead } from '../../lib/leadService';
+  import { getRecommendations } from '../../lib/recommendationEngine';
+  import type { Stream } from '../../lib/recommendationEngine';
+
+  const form = document.getElementById('failed-form') as HTMLFormElement;
+
+  const nameInput       = document.getElementById('failed-name')       as HTMLInputElement;
+  const cityInput       = document.getElementById('failed-city')       as HTMLInputElement;
+  const phoneInput      = document.getElementById('failed-phone')      as HTMLInputElement;
+  const emailInput      = document.getElementById('failed-email')      as HTMLInputElement;
+  const percentageInput = document.getElementById('failed-percentage') as HTMLInputElement;
+  const streamSelect    = document.getElementById('failed-stream')     as HTMLSelectElement;
+
+  const nameError       = document.getElementById('failed-name-error')       as HTMLSpanElement;
+  const cityError       = document.getElementById('failed-city-error')       as HTMLSpanElement;
+  const phoneError      = document.getElementById('failed-phone-error')      as HTMLSpanElement;
+  const emailError      = document.getElementById('failed-email-error')      as HTMLSpanElement;
+  const percentageError = document.getElementById('failed-percentage-error') as HTMLSpanElement;
+  const streamError     = document.getElementById('failed-stream-error')     as HTMLSpanElement;
+  const submitError     = document.getElementById('failed-submit-error')     as HTMLDivElement;
+
+  function setError(span: HTMLSpanElement, input: HTMLElement, msg: string | null): void {
+    if (msg) {
+      span.textContent = msg;
+      input.classList.add('form-input--error');
+      input.setAttribute('aria-invalid', 'true');
+    } else {
+      span.textContent = '';
+      input.classList.remove('form-input--error');
+      input.removeAttribute('aria-invalid');
+    }
+  }
+
+  function setSelectError(span: HTMLSpanElement, sel: HTMLSelectElement, msg: string | null): void {
+    if (msg) {
+      span.textContent = msg;
+      sel.classList.add('form-select--error');
+      sel.setAttribute('aria-invalid', 'true');
+    } else {
+      span.textContent = '';
+      sel.classList.remove('form-select--error');
+      sel.removeAttribute('aria-invalid');
+    }
+  }
+
+  const submitBtn = form.querySelector<HTMLButtonElement>('.ff-submit');
+
+  function setSubmitLoading(loading: boolean): void {
+    if (!submitBtn) return;
+    if (loading) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="animation:ff-spin 700ms linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Submitting...`;
+    } else {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Get My Recommendations`;
+    }
+  }
+
+  form.addEventListener('submit', async (e: Event) => {
+    e.preventDefault();
+    submitError.style.display = 'none';
+
+    const name = nameInput.value, city = cityInput.value, phone = phoneInput.value;
+    const email = emailInput.value, percentage = percentageInput.value;
+    const streamRaw = streamSelect.value;
+    const stream = streamRaw as Stream;
+
+    const nameErr       = validateName(name);
+    const cityErr       = city.trim().length === 0 ? 'City is required.' : null;
+    const phoneErr      = validatePhone(phone);
+    const emailErr      = validateEmail(email);
+    const percentageErr = validatePercentage(percentage);
+    const streamErr     = streamRaw === '' ? 'Please select your stream.' : null;
+
+    setError(nameError,       nameInput,       nameErr);
+    setError(cityError,       cityInput,       cityErr);
+    setError(phoneError,      phoneInput,      phoneErr);
+    setError(emailError,      emailInput,      emailErr);
+    setError(percentageError, percentageInput, percentageErr);
+    setSelectError(streamError, streamSelect,  streamErr);
+
+    if (nameErr || cityErr || phoneErr || emailErr || percentageErr || streamErr) {
+      if (nameErr)       { nameInput.focus();       return; }
+      if (cityErr)       { cityInput.focus();       return; }
+      if (phoneErr)      { phoneInput.focus();      return; }
+      if (emailErr)      { emailInput.focus();      return; }
+      if (percentageErr) { percentageInput.focus(); return; }
+      if (streamErr)     { streamSelect.focus();    return; }
+      return;
+    }
+
+    setSubmitLoading(true);
+
+    const recommendations = getRecommendations('failed', stream);
+    const payload = buildPayload({ name, city, phone, email, percentage }, 'failed', stream, recommendations);
+
+    try {
+      await submitLead(payload);
+      window.dispatchEvent(new CustomEvent('show-success-screen', {
+        detail: { result: 'failed', stream, recommendations, phone },
+      }));
+    } catch {
+      submitError.style.display = 'block';
+      setSubmitLoading(false);
+    }
+  });
+</script>

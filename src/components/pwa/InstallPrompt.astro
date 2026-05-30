@@ -1,0 +1,211 @@
+---
+/**
+ * InstallPrompt.astro
+ *
+ * PWA install banner that listens for the browser's `beforeinstallprompt`
+ * event and surfaces a fixed bottom bar inviting the student to add
+ * CareerSpark to their home screen.
+ *
+ * Requirements: 10.3, 10.4
+ *
+ * Behaviour:
+ *  - If `careerspark_install_dismissed` is set in sessionStorage, the
+ *    banner is never shown for the remainder of the session.
+ *  - When `beforeinstallprompt` fires the banner becomes visible.
+ *  - "Install" triggers the deferred prompt; after the user responds the
+ *    banner is hidden.
+ *  - "✕" hides the banner and sets the sessionStorage flag so it does
+ *    not reappear this session (Requirement 10.4).
+ */
+---
+
+<!-- Install banner – hidden by default via the `hidden` utility class -->
+<div
+  id="install-banner"
+  class="install-banner hidden"
+  role="region"
+  aria-label="Install CareerSpark app"
+>
+  <p class="install-banner__message">
+    Add CareerSpark to your home screen for quick access
+  </p>
+
+  <div class="install-banner__actions">
+    <button id="install-btn" class="btn-gradient install-banner__install-btn">
+      Install
+    </button>
+
+    <button
+      id="install-dismiss-btn"
+      class="install-banner__dismiss-btn"
+      aria-label="Dismiss install prompt"
+    >
+      ✕
+    </button>
+  </div>
+</div>
+
+<style>
+  /* ── Install Banner ─────────────────────────────────────────
+     Fixed bottom bar with glassmorphism styling.
+     z-index 1000 keeps it above all page content.
+  ──────────────────────────────────────────────────────────── */
+  .install-banner {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+
+    /* Constrain to the mobile shell width on desktop */
+    width: 100%;
+    max-width: 430px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+
+    /* Glassmorphism — adapts to dark/light via CSS vars */
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border-top: 1px solid var(--glass-border);
+    border-left: 1px solid var(--glass-border);
+    border-right: 1px solid var(--glass-border);
+    border-radius: var(--glass-radius) var(--glass-radius) 0 0;
+    box-shadow: var(--shadow-lg), var(--glow-primary);
+
+    z-index: 1000;
+
+    /* Slide-up entrance animation */
+    animation: banner-slide-up var(--transition-normal) ease both;
+  }
+
+  @keyframes banner-slide-up {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
+  /* Hidden state – overrides display so the banner is fully removed
+     from the layout and invisible to assistive technology. */
+  .install-banner.hidden {
+    display: none;
+  }
+
+  /* ── Message ──────────────────────────────────────────────── */
+  .install-banner__message {
+    flex: 1;
+    font-size: var(--font-size-sm);
+    color: var(--color-text);
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  /* ── Action row ───────────────────────────────────────────── */
+  .install-banner__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-shrink: 0;
+  }
+
+  /* Install button – inherits .btn-gradient from global.css,
+     overridden to a compact size suitable for the banner. */
+  .install-banner__install-btn {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--font-size-sm);
+    border-radius: 9999px;
+  }
+
+  /* ── Dismiss button ───────────────────────────────────────── */
+  .install-banner__dismiss-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--glass-border);
+    border-radius: 50%;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-base);
+    line-height: 1;
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast);
+  }
+
+  .install-banner__dismiss-btn:hover {
+    background: rgba(255, 255, 255, 0.16);
+    color: var(--color-text);
+  }
+</style>
+
+<script>
+  // ── PWA Install Prompt Logic ─────────────────────────────────
+  // Requirement 10.3 – show banner when beforeinstallprompt fires.
+  // Requirement 10.4 – do not show again in the same session after dismiss.
+
+  (function () {
+    const DISMISSED_KEY = 'careerspark_install_dismissed';
+
+    // If the student already dismissed the prompt this session, bail out.
+    if (sessionStorage.getItem(DISMISSED_KEY)) return;
+
+    const banner      = document.getElementById('install-banner')      as HTMLDivElement | null;
+    const installBtn  = document.getElementById('install-btn')         as HTMLButtonElement | null;
+    const dismissBtn  = document.getElementById('install-dismiss-btn') as HTMLButtonElement | null;
+
+    if (!banner || !installBtn || !dismissBtn) return;
+
+    // Typed reference to the deferred prompt event.
+    let deferredPrompt: BeforeInstallPromptEvent | null = null;
+
+    // The BeforeInstallPromptEvent is not yet in the standard TS lib.
+    interface BeforeInstallPromptEvent extends Event {
+      prompt(): Promise<void>;
+      readonly userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+    }
+
+    // ── Listen for the browser's install prompt ──────────────
+    window.addEventListener('beforeinstallprompt', (e: Event) => {
+      // Prevent the mini-infobar from appearing on mobile Chrome.
+      e.preventDefault();
+
+      deferredPrompt = e as BeforeInstallPromptEvent;
+
+      // Show the banner by removing the `hidden` class.
+      banner.classList.remove('hidden');
+    });
+
+    // ── Install button ───────────────────────────────────────
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+
+      // Trigger the native install dialog.
+      await deferredPrompt.prompt();
+
+      // Wait for the user's decision.
+      await deferredPrompt.userChoice;
+
+      // Hide the banner regardless of the outcome.
+      banner.classList.add('hidden');
+      deferredPrompt = null;
+    });
+
+    // ── Dismiss button ───────────────────────────────────────
+    dismissBtn.addEventListener('click', () => {
+      banner.classList.add('hidden');
+      // Prevent the banner from reappearing for the rest of the session.
+      sessionStorage.setItem(DISMISSED_KEY, '1');
+      deferredPrompt = null;
+    });
+  })();
+</script>

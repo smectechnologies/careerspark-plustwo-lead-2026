@@ -1,0 +1,341 @@
+---
+// ResultToggle.astro
+// Segmented pill toggle: PASSED | (center dot) | NOT CLEARED
+// Default: center/none — both forms hidden.
+// Selecting a node reveals the matching form with slide-in animation.
+// Dark mode only. SVG icons.
+// Requirements: 2.4–2.8, 13.1, 13.2
+---
+
+<div class="toggle-section">
+
+  <p class="toggle-label-text">What's your Plus Two result?</p>
+
+  <!-- Pill segmented control -->
+  <div class="toggle-pill" role="group" aria-label="Select your Plus Two result">
+
+    <!-- PASSED segment -->
+    <button
+      class="pill-segment pill-segment--passed"
+      id="node-passed"
+      type="button"
+      aria-pressed="false"
+    >
+      <span class="pill-segment__icon">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <circle cx="10" cy="10" r="8.5" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M6.5 10.5l2.5 2.5 4.5-4.5" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="pill-segment__label">Passed</span>
+    </button>
+
+    <!-- Center divider with thumb dot -->
+    <div class="pill-divider" aria-hidden="true">
+      <span class="pill-dot" id="pill-dot"></span>
+    </div>
+
+    <!-- FAILED segment -->
+    <button
+      class="pill-segment pill-segment--failed"
+      id="node-failed"
+      type="button"
+      aria-pressed="false"
+    >
+      <span class="pill-segment__label">Not Cleared</span>
+      <span class="pill-segment__icon">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <circle cx="10" cy="10" r="8.5" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M7 7l6 6M13 7l-6 6" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round"/>
+        </svg>
+      </span>
+    </button>
+
+  </div>
+
+  <!-- Status badge -->
+  <div class="toggle-badge-row" aria-live="polite">
+    <span class="toggle-badge toggle-badge--none" id="result-badge">
+      <span class="badge-pulse" id="badge-pulse"></span>
+      <span id="badge-text">Tap a button to continue</span>
+    </span>
+  </div>
+
+</div>
+
+<style>
+  /* ── Section ──────────────────────────────────────────────── */
+  .toggle-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 0 8px;
+  }
+
+  /* ── Label ────────────────────────────────────────────────── */
+  .toggle-label-text {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    color: var(--color-text-muted);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  /* ── Pill container ───────────────────────────────────────── */
+  .toggle-pill {
+    display: flex;
+    align-items: stretch;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 9999px;
+    padding: 4px;
+    gap: 0;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.06),
+      0 4px 20px rgba(0,0,0,0.4);
+    position: relative;
+  }
+
+  /* ── Segment buttons ──────────────────────────────────────── */
+  .pill-segment {
+    appearance: none;
+    -webkit-appearance: none;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 20px;
+    background: transparent;
+    border: none;
+    border-radius: 9999px;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    transition:
+      color 250ms ease,
+      background 250ms ease,
+      box-shadow 250ms ease,
+      transform 200ms ease;
+    white-space: nowrap;
+    position: relative;
+    z-index: 1;
+  }
+
+  .pill-segment:hover {
+    color: var(--color-text);
+    background: rgba(255,255,255,0.05);
+  }
+
+  .pill-segment:focus-visible {
+    outline: 2px solid var(--color-secondary);
+    outline-offset: 3px;
+  }
+  .pill-segment:focus:not(:focus-visible) { outline: none; }
+
+  /* ── Segment icon ─────────────────────────────────────────── */
+  .pill-segment__icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .pill-segment__icon svg {
+    width: 17px;
+    height: 17px;
+    transition: color 250ms ease;
+  }
+
+  /* ── Center divider ───────────────────────────────────────── */
+  .pill-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Center dot ───────────────────────────────────────────── */
+  .pill-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-text-muted);
+    opacity: 0.4;
+    transition:
+      background 300ms ease,
+      box-shadow 300ms ease,
+      opacity 300ms ease,
+      transform 300ms cubic-bezier(0.34, 1.4, 0.64, 1);
+    display: block;
+  }
+
+  /* ── PASSED active ────────────────────────────────────────── */
+  .pill-segment--passed[aria-pressed="true"] {
+    color: #00FFF0;
+    background: rgba(0, 255, 240, 0.12);
+    box-shadow:
+      0 0 18px rgba(0, 255, 240, 0.35),
+      inset 0 1px 0 rgba(0, 255, 240, 0.18);
+    transform: scale(1.02);
+  }
+
+  .toggle-pill:has(#node-passed[aria-pressed="true"]) .pill-dot {
+    background: #00FFF0;
+    opacity: 1;
+    box-shadow: 0 0 10px rgba(0, 255, 240, 1), 0 0 22px rgba(0, 255, 240, 0.6);
+    transform: translateX(-6px);
+  }
+
+  /* ── NOT CLEARED active — neon green (positive, hopeful) ──── */
+  .pill-segment--failed[aria-pressed="true"] {
+    color: #7DFF72;
+    background: rgba(125, 255, 114, 0.12);
+    box-shadow:
+      0 0 18px rgba(125, 255, 114, 0.35),
+      inset 0 1px 0 rgba(125, 255, 114, 0.18);
+    transform: scale(1.02);
+  }
+
+  .toggle-pill:has(#node-failed[aria-pressed="true"]) .pill-dot {
+    background: #7DFF72;
+    opacity: 1;
+    box-shadow: 0 0 10px rgba(125, 255, 114, 1), 0 0 22px rgba(125, 255, 114, 0.6);
+    transform: translateX(6px);
+  }
+
+  /* ── Badge row ────────────────────────────────────────────── */
+  .toggle-badge-row {
+    min-height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── Badge ────────────────────────────────────────────────── */
+  .toggle-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 11px 3px 8px;
+    border-radius: 9999px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border: 1px solid transparent;
+    transition: all 280ms ease;
+  }
+
+  /* ── Pulse dot inside badge ───────────────────────────────── */
+  .badge-pulse {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: background 280ms ease, box-shadow 280ms ease;
+    position: relative;
+  }
+
+  .badge-pulse::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: inherit;
+    opacity: 0;
+    animation: none;
+  }
+
+  .toggle-badge--passed .badge-pulse::after,
+  .toggle-badge--failed .badge-pulse::after {
+    animation: badge-ping 1.5s ease-out infinite;
+  }
+
+  @keyframes badge-ping {
+    0%   { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(2.5); opacity: 0; }
+  }
+
+  .toggle-badge--none {
+    background: rgba(255,255,255,0.04);
+    border-color: var(--glass-border);
+    color: var(--color-text-muted);
+  }
+  .toggle-badge--none .badge-pulse { background: var(--color-text-muted); opacity: 0.5; }
+
+  .toggle-badge--passed {
+    background: rgba(0, 255, 240, 0.10);
+    border-color: rgba(0, 255, 240, 0.38);
+    color: #00FFF0;
+  }
+  .toggle-badge--passed .badge-pulse {
+    background: #00FFF0;
+    box-shadow: 0 0 8px rgba(0, 255, 240, 1);
+  }
+
+  .toggle-badge--failed {
+    background: rgba(125, 255, 114, 0.10);
+    border-color: rgba(125, 255, 114, 0.38);
+    color: #7DFF72;
+  }
+  .toggle-badge--failed .badge-pulse {
+    background: #7DFF72;
+    box-shadow: 0 0 8px rgba(125, 255, 114, 1);
+  }
+
+  /* ── Desktop scale-up ─────────────────────────────────────── */
+  @media (min-width: 431px) {
+    .toggle-section { gap: 14px; padding: 8px 0 12px; }
+    .toggle-label-text { font-size: var(--font-size-sm); }
+    .pill-segment { padding: 12px 28px; font-size: var(--font-size-base); gap: 9px; }
+    .pill-segment__icon svg { width: 20px; height: 20px; }
+    .pill-divider { width: 32px; }
+    .pill-dot { width: 10px; height: 10px; }
+    .toggle-badge { font-size: 0.72rem; padding: 4px 14px 4px 10px; }
+    .badge-pulse { width: 7px; height: 7px; }
+  }
+</style>
+
+<script>
+  const nodePassed = document.getElementById('node-passed') as HTMLButtonElement | null;
+  const nodeFailed = document.getElementById('node-failed') as HTMLButtonElement | null;
+  const badge      = document.getElementById('result-badge') as HTMLElement | null;
+  const badgeText  = document.getElementById('badge-text')   as HTMLElement | null;
+
+  type State = 'none' | 'passed' | 'failed';
+  let current: State = 'none';
+
+  function setState(next: State): void {
+    // Tapping the active segment deselects (back to none)
+    if (next === current) next = 'none';
+    current = next;
+
+    nodePassed?.setAttribute('aria-pressed', String(next === 'passed'));
+    nodeFailed?.setAttribute('aria-pressed', String(next === 'failed'));
+
+    if (badge && badgeText) {
+      badge.className = `toggle-badge toggle-badge--${next}`;
+      badgeText.textContent =
+        next === 'passed' ? 'Plus Two Passed' :
+        next === 'failed' ? 'Plus Two Not Cleared' :
+        'Tap a button to continue';
+    }
+
+    window.dispatchEvent(
+      new CustomEvent('result-toggle-change', { detail: next, bubbles: true })
+    );
+  }
+
+  nodePassed?.addEventListener('click', () => setState('passed'));
+  nodeFailed?.addEventListener('click', () => setState('failed'));
+</script>

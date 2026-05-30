@@ -1,0 +1,423 @@
+---
+/**
+ * SuccessScreen.astro
+ * Post-submission success screen with rich glassmorphism course cards.
+ * Cards are injected via JS so all card styles use :global() to bypass
+ * Astro's scoped CSS hashing.
+ */
+---
+
+<div id="success-screen" class="success-screen hidden" aria-live="polite">
+
+  <!-- Header -->
+  <div class="ss-header">
+    <div class="ss-header__icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+        <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+      </svg>
+    </div>
+    <h2 class="ss-header__title">Your Career Recommendations</h2>
+    <p class="ss-header__sub">Personalised picks based on your profile</p>
+  </div>
+
+  <!-- Course cards injected here by JS -->
+  <div id="course-cards-container" class="course-cards-container"></div>
+
+</div>
+
+<style>
+  /* ── Screen ───────────────────────────────────────────────── */
+  .success-screen.hidden { display: none; }
+
+  .success-screen {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100%;
+    padding: var(--space-md) var(--space-md) 0;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    background: var(--color-bg);
+  }
+
+  /* ── Header ───────────────────────────────────────────────── */
+  .ss-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: var(--space-md) 0 var(--space-md);
+    text-align: center;
+  }
+
+  .ss-header__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: rgba(0, 191, 255, 0.12);
+    border: 1px solid rgba(0, 191, 255, 0.32);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-primary);
+    box-shadow: 0 0 20px rgba(0, 191, 255, 0.30);
+    margin-bottom: 4px;
+  }
+
+  .ss-header__icon svg { width: 24px; height: 24px; }
+
+  .ss-header__title {
+    font-size: var(--font-size-xl);
+    font-weight: 800;
+    background: var(--gradient-hero);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  .ss-header__sub {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  /* ── Container ────────────────────────────────────────────── */
+  .course-cards-container {
+    flex: 1;
+    padding-bottom: var(--space-xl);
+  }
+
+  /* ── Desktop header ───────────────────────────────────────── */
+  @media (min-width: 431px) {
+    .success-screen { padding: var(--space-lg) var(--space-xl) var(--space-xl); }
+    .ss-header__title { font-size: var(--font-size-2xl); }
+    .ss-header__icon { width: 56px; height: 56px; border-radius: 16px; }
+    .ss-header__icon svg { width: 28px; height: 28px; }
+  }
+</style>
+
+<style is:global>
+  /* ══════════════════════════════════════════════════════════
+     COURSE CARD — global so JS-injected HTML gets styled
+  ══════════════════════════════════════════════════════════ */
+
+  .cc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* ── Card shell ───────────────────────────────────────────── */
+  .cc-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid color-mix(in srgb, var(--card-solid-accent, #00F5D4) 30%, rgba(255,255,255,0.08));
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    opacity: 0;
+    transition: transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease;
+  }
+
+  /* shimmer on hover */
+  .cc-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.06) 45%, transparent 75%);
+    transform: translateX(-130%);
+    transition: transform 600ms ease;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .cc-card:hover {
+      transform: translateY(-5px) scale(1.01);
+      border-color: color-mix(in srgb, var(--card-solid-accent, #00F5D4) 65%, white);
+      box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.42),
+        0 0 30px color-mix(in srgb, var(--card-solid-accent, #00F5D4) 25%, transparent),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+    .cc-card:hover::after {
+      transform: translateX(130%);
+    }
+  }
+
+  /* ── Gradient top band ────────────────────────────────────── */
+  .cc-card__header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px 13px;
+    background: var(--card-accent, linear-gradient(135deg, #7C3AED, #00F5D4));
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  /* decorative glow blob top-right */
+  .cc-card__glow {
+    position: absolute;
+    right: -24px;
+    top: -24px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    filter: blur(22px);
+    pointer-events: none;
+  }
+
+  /* numbered badge */
+  .cc-card__num {
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    color: #fff;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  .cc-card__label {
+    position: relative;
+    z-index: 1;
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  /* ── Card body ────────────────────────────────────────────── */
+  .cc-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px 16px 18px;
+  }
+
+  .cc-card__name {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.3;
+    margin: 0;
+  }
+
+  .cc-card__desc {
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.58);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  /* ── Chips ────────────────────────────────────────────────── */
+  .cc-card__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 2px;
+  }
+
+  .cc-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 11px;
+    border-radius: 8px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    background: color-mix(in srgb, var(--card-solid-accent, #00F5D4) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--card-solid-accent, #00F5D4) 35%, transparent);
+    color: color-mix(in srgb, var(--card-solid-accent, #00F5D4) 92%, white);
+  }
+
+  .cc-chip svg {
+    flex-shrink: 0;
+    opacity: 0.85;
+  }
+
+  /* ── No results ───────────────────────────────────────────── */
+  .no-recommendations {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 0.9rem;
+    padding: 48px 16px;
+  }
+
+  /* ── Desktop ──────────────────────────────────────────────── */
+  @media (min-width: 431px) {
+    .cc-list { gap: 20px; }
+    .cc-card { border-radius: 24px; }
+    .cc-card__header { padding: 16px 20px 15px; }
+    .cc-card__num { width: 42px; height: 42px; font-size: 0.82rem; }
+    .cc-card__body { padding: 18px 20px 22px; gap: 12px; }
+    .cc-card__name { font-size: 1.1rem; }
+    .cc-card__desc { font-size: 0.86rem; }
+    .cc-chip { font-size: 0.76rem; padding: 6px 13px; }
+  }
+</style>
+
+<script>
+  import confetti from 'canvas-confetti';
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const CARD_ACCENTS = [
+    { gradient: 'linear-gradient(135deg,#00BFFF,#00FFF0)', solid: '#00FFF0' },
+    { gradient: 'linear-gradient(135deg,#7DFF72,#00FFF0)', solid: '#7DFF72' },
+    { gradient: 'linear-gradient(135deg,#00FFF0,#00BFFF)', solid: '#00BFFF' },
+    { gradient: 'linear-gradient(135deg,#5BC8FF,#7DFF72)', solid: '#5BC8FF' },
+    { gradient: 'linear-gradient(135deg,#A8FF78,#00BFFF)', solid: '#A8FF78' },
+    { gradient: 'linear-gradient(135deg,#00BFFF,#7DFF72)', solid: '#00BFFF' },
+  ];
+
+  function esc(s: string): string {
+    return s
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function clockSvg(): string {
+    return `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+  }
+
+  function graduationSvg(): string {
+    return `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>`;
+  }
+
+  function buildCard(
+    course: {
+      id: string;
+      name: string;
+      duration: string;
+      eligibility: string;
+      careerDescription: string;
+      exploreUrl: string;
+    },
+    index: number
+  ): string {
+    const accent = CARD_ACCENTS[index % CARD_ACCENTS.length];
+    const num = String(index + 1).padStart(2, '0');
+
+    return `
+      <article
+        class="cc-card"
+        data-course-id="${esc(course.id)}"
+        style="--card-accent:${accent.gradient};--card-solid-accent:${accent.solid}"
+        role="listitem"
+      >
+        <div class="cc-card__header">
+          <span class="cc-card__num">${num}</span>
+          <span class="cc-card__label">Recommended</span>
+          <div class="cc-card__glow" aria-hidden="true"></div>
+        </div>
+
+        <div class="cc-card__body">
+          <h3 class="cc-card__name">${esc(course.name)}</h3>
+          <p class="cc-card__desc">${esc(course.careerDescription)}</p>
+          <div class="cc-card__chips">
+            <span class="cc-chip">${clockSvg()} ${esc(course.duration)}</span>
+            <span class="cc-chip">${graduationSvg()} ${esc(course.eligibility)}</span>
+          </div>
+        </div>
+      </article>`;
+  }
+
+  function fireConfetti(): void {
+    const end = Date.now() + 2500;
+    const colors = ['#00BFFF', '#00FFF0', '#7DFF72', '#5BC8FF', '#A8FF78'];
+    const frame = (): void => {
+      confetti({ particleCount: 4, angle: 60,  spread: 55, origin: { x: 0 }, colors });
+      confetti({ particleCount: 4, angle: 120, spread: 55, origin: { x: 1 }, colors });
+      if (Date.now() < end) requestAnimationFrame(frame);
+    };
+    frame();
+  }
+
+  function animateCards(container: HTMLElement): void {
+    const screen = document.getElementById('success-screen');
+    container.querySelectorAll<HTMLElement>('.cc-card').forEach((card, i) => {
+      gsap.set(card, { opacity: 0, y: 40 });
+      gsap.to(card, {
+        scrollTrigger: {
+          trigger: card,
+          start: 'top 92%',
+          scroller: screen ?? undefined,
+        },
+        y: 0,
+        opacity: 1,
+        duration: 0.55,
+        delay: i * 0.09,
+        ease: 'power2.out',
+      });
+    });
+  }
+
+  window.addEventListener('show-success-screen', (event: Event) => {
+    const ev = event as CustomEvent<{
+      result: string;
+      stream: string;
+      phone?: string;
+      recommendations: Array<{
+        id: string;
+        name: string;
+        duration: string;
+        eligibility: string;
+        careerDescription: string;
+        exploreUrl: string;
+      }>;
+    }>;
+
+    const { recommendations } = ev.detail;
+
+    const screen = document.getElementById('success-screen');
+    if (!screen) return;
+    screen.classList.remove('hidden');
+
+    const container = document.getElementById('course-cards-container');
+    if (!container) return;
+
+    if (recommendations && recommendations.length > 0) {
+      container.innerHTML = `
+        <div class="cc-list" role="list" aria-label="Recommended courses">
+          ${recommendations.map((c, i) => buildCard(c, i)).join('')}
+        </div>`;
+      animateCards(container);
+    } else {
+      container.innerHTML = `<p class="no-recommendations">No recommendations found. Please contact us directly.</p>`;
+    }
+
+    fireConfetti();
+    screen.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+</script>

@@ -1,0 +1,137 @@
+---
+/**
+ * ParticleBackground.astro
+ *
+ * Lightweight canvas-based particle animation for the landing screen.
+ * Renders behind all other content (z-index: 0, pointer-events: none).
+ *
+ * Requirement 11.4 – Particle background animation using a lightweight
+ * canvas-based implementation.
+ */
+---
+
+<canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+<style>
+  #particle-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  (function () {
+    const canvas = document.getElementById('particle-canvas') as HTMLCanvasElement | null;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // ── Palette ──────────────────────────────────────────────────────────
+    // Gen Z neon palette — auto-adapts to dark/light mode
+    const darkColours  = ['#00BFFF', '#00FFF0', '#7DFF72', '#5BC8FF', '#A8FF78'];
+    const lightColours = ['#0099CC', '#00CCB8', '#5ECC55', '#4AA0CC', '#80CC5E'];
+    const prefersDark  = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const COLOURS = prefersDark ? darkColours : lightColours;
+
+    // ── Particle count ───────────────────────────────────────────────────
+    const PARTICLE_COUNT = 40;
+
+    interface Particle {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      radius: number;
+      opacity: number;
+      colour: string;
+    }
+
+    let particles: Particle[] = [];
+    let animationId: number;
+
+    // ── Helpers ──────────────────────────────────────────────────────────
+    function rand(min: number, max: number): number {
+      return Math.random() * (max - min) + min;
+    }
+
+    function createParticle(): Particle {
+      return {
+        x: rand(0, canvas!.width),
+        y: rand(0, canvas!.height),
+        vx: rand(-0.4, 0.4),
+        vy: rand(-0.4, 0.4),
+        radius: rand(1, 3),
+        opacity: rand(0.15, 0.35),
+        colour: COLOURS[Math.floor(Math.random() * COLOURS.length)],
+      };
+    }
+
+    // ── Resize handling ──────────────────────────────────────────────────
+    function resize(): void {
+      const parent = canvas!.parentElement;
+      if (parent) {
+        canvas!.width = parent.clientWidth;
+        canvas!.height = parent.clientHeight;
+      } else {
+        canvas!.width = window.innerWidth;
+        canvas!.height = window.innerHeight;
+      }
+    }
+
+    // ── Initialise ───────────────────────────────────────────────────────
+    function init(): void {
+      resize();
+      particles = Array.from({ length: PARTICLE_COUNT }, createParticle);
+    }
+
+    // ── Animation loop ───────────────────────────────────────────────────
+    function draw(): void {
+      ctx!.clearRect(0, 0, canvas!.width, canvas!.height);
+
+      for (const p of particles) {
+        // Move
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Wrap at edges
+        if (p.x < -p.radius)              p.x = canvas!.width  + p.radius;
+        if (p.x > canvas!.width  + p.radius) p.x = -p.radius;
+        if (p.y < -p.radius)              p.y = canvas!.height + p.radius;
+        if (p.y > canvas!.height + p.radius) p.y = -p.radius;
+
+        // Draw circle
+        ctx!.beginPath();
+        ctx!.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx!.fillStyle = p.colour;
+        ctx!.globalAlpha = p.opacity;
+        ctx!.fill();
+      }
+
+      // Reset globalAlpha so it doesn't bleed into other canvas draws
+      ctx!.globalAlpha = 1;
+
+      animationId = requestAnimationFrame(draw);
+    }
+
+    // ── Start ────────────────────────────────────────────────────────────
+    init();
+    draw();
+
+    // ── Resize listener ──────────────────────────────────────────────────
+    let resizeTimer: ReturnType<typeof setTimeout>;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        cancelAnimationFrame(animationId);
+        init();
+        draw();
+      }, 150);
+    });
+  })();
+</script>

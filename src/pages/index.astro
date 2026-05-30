@@ -1,0 +1,336 @@
+---
+import '../styles/global.css';
+import MobileShell from '../components/layout/MobileShell.astro';
+import ParticleBackground from '../components/layout/ParticleBackground.astro';
+import Logo from '../components/landing/Logo.astro';
+import HeroText from '../components/landing/HeroText.astro';
+import ResultToggle from '../components/landing/ResultToggle.astro';
+import PassedForm from '../components/forms/PassedForm.astro';
+import FailedForm from '../components/forms/FailedForm.astro';
+import SuccessScreen from '../components/recommendations/SuccessScreen.astro';
+import InstallPrompt from '../components/pwa/InstallPrompt.astro';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Primary Meta -->
+    <title>CareerSpark – Discover Your Perfect Career Path</title>
+    <meta name="description" content="Answer a few questions about your Plus Two results and get instant personalised course recommendations from CareerSpark." />
+
+    <!-- Open Graph -->
+    <meta property="og:type"        content="website" />
+    <meta property="og:title"       content="CareerSpark – Discover Your Perfect Career Path" />
+    <meta property="og:description" content="Answer a few questions about your Plus Two results and get instant personalised course recommendations." />
+    <meta property="og:image"       content="/icons/icon-512x512.png" />
+    <meta property="og:url"         content={Astro.url.href} />
+
+    <!-- Canonical -->
+    <link rel="canonical" href={Astro.url.href} />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#0A0A0F" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#F5F3FF" media="(prefers-color-scheme: light)" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="CareerSpark" />
+  </head>
+  <body>
+    <div id="app-loader" class="app-loader" role="status" aria-live="polite">
+      <span class="app-loader__spinner" aria-hidden="true"></span>
+      <span class="sr-only">Loading CareerSpark</span>
+    </div>
+
+    <MobileShell>
+      <ParticleBackground />
+
+      <main id="app" class="app-content">
+        <section id="intake-screen" class="intake-screen" aria-label="CareerSpark lead form">
+          <Logo />
+          <HeroText />
+          <ResultToggle />
+
+          <!-- Hero image — visible on load, collapses when toggle selected -->
+          <div id="hero-image-wrap" class="hero-image-wrap" aria-hidden="true">
+            <div class="hero-image-inner">
+              <img
+                src="/hero.webp"
+                alt=""
+                class="hero-image"
+                draggable="false"
+                fetchpriority="high"
+                width="430"
+                height="220"
+              />
+            </div>
+          </div>
+
+          <div id="form-panels-wrap" class="form-panels-wrap">
+            <div class="form-panels">
+              <div id="passed-panel" class="form-panel" hidden>
+                <PassedForm />
+              </div>
+              <div id="failed-panel" class="form-panel" hidden>
+                <FailedForm />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <SuccessScreen />
+      </main>
+
+      <InstallPrompt />
+    </MobileShell>
+
+    <script is:inline>
+      !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f['_fbq'])f['_fbq']=n;
+      n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
+      (window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', 'CAREERSPARK_PIXEL_ID');
+      fbq('track', 'PageView');
+    </script>
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-CAREERSPARK"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-CAREERSPARK');
+    </script>
+
+    <script>
+      import { captureUtmParams } from '../lib/utmTracker';
+      import { trackLead } from '../lib/analytics';
+
+      const passedPanel    = document.getElementById('passed-panel')    as HTMLDivElement | null;
+      const failedPanel    = document.getElementById('failed-panel')    as HTMLDivElement | null;
+      const intakeScreen   = document.getElementById('intake-screen')   as HTMLElement    | null;
+      const resultToggle   = document.querySelector<HTMLElement>('.toggle-section');
+      const loader         = document.getElementById('app-loader')      as HTMLDivElement | null;
+      const heroWrap       = document.getElementById('hero-image-wrap') as HTMLDivElement | null;
+      const formPanelsWrap = document.getElementById('form-panels-wrap') as HTMLDivElement | null;
+
+      captureUtmParams(new URL(window.location.href));
+
+      let heroVisible = true;
+
+      function hideHero(): void {
+        if (!heroWrap || !heroVisible) return;
+        heroVisible = false;
+        heroWrap.classList.add('hero-collapsing');
+        // After transition ends, fully remove from flow
+        heroWrap.addEventListener('transitionend', () => {
+          heroWrap.classList.add('hero-gone');
+          heroWrap.classList.remove('hero-collapsing');
+        }, { once: true });
+      }
+
+      function showHero(): void {
+        if (!heroWrap || heroVisible) return;
+        heroVisible = true;
+        heroWrap.classList.remove('hero-gone');
+        // Force reflow so transition plays from collapsed state
+        void heroWrap.offsetHeight;
+        heroWrap.classList.remove('hero-collapsing');
+      }
+
+      function showPanel(panel: HTMLDivElement): void {
+        panel.hidden = false;
+        // Force reflow so animation replays
+        panel.classList.remove('form-panel');
+        void panel.offsetWidth;
+        panel.classList.add('form-panel');
+      }
+
+      window.addEventListener('result-toggle-change', (event: Event) => {
+        const result = (event as CustomEvent<'passed' | 'failed' | 'none'>).detail;
+        if (!passedPanel || !failedPanel) return;
+
+        if (result === 'passed') {
+          hideHero();
+          failedPanel.hidden = true;
+          showPanel(passedPanel);
+        } else if (result === 'failed') {
+          hideHero();
+          passedPanel.hidden = true;
+          showPanel(failedPanel);
+        } else {
+          // Deselected — show hero, hide forms
+          showHero();
+          passedPanel.hidden = true;
+          failedPanel.hidden = true;
+        }
+      });
+
+      window.addEventListener('show-success-screen', () => {
+        if (intakeScreen) intakeScreen.hidden = true;
+        trackLead();
+      });
+
+      window.addEventListener('passed-subject-step-active', () => {
+        if (resultToggle) resultToggle.hidden = true;
+      });
+
+      window.addEventListener('passed-subject-step-back', () => {
+        if (resultToggle) resultToggle.hidden = false;
+      });
+
+      window.addEventListener('load', () => {
+        if (!loader) return;
+        loader.classList.add('app-loader--hidden');
+        window.setTimeout(() => loader.remove(), 250);
+      });
+
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker
+            .register('/sw.js')
+            .catch((error) => console.warn('Service worker registration failed', error));
+        });
+      }
+    </script>
+  </body>
+</html>
+
+<style>
+  .app-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    background: var(--color-bg);
+    transition: opacity 200ms ease, visibility 200ms ease;
+  }
+
+  .app-loader--hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .app-loader__spinner {
+    width: 42px;
+    height: 42px;
+    border: 3px solid rgba(124, 58, 237, 0.2);
+    border-top-color: var(--color-secondary);
+    border-radius: 50%;
+    animation: app-loader-spin 800ms linear infinite;
+  }
+
+  @keyframes app-loader-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .app-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    overflow-y: auto;
+  }
+
+  .intake-screen {
+    position: relative;
+    z-index: 1;
+    min-height: 100%;
+    padding: 0 var(--space-md) var(--space-lg);
+  }
+
+  .intake-screen[hidden] { display: none; }
+
+  /* ════════════════════════════════════════════════════════
+     HERO IMAGE — smooth height collapse + fade out
+  ════════════════════════════════════════════════════════ */
+
+  /*
+   * Outer wrapper uses display:grid with grid-template-rows.
+   * Collapsing from 1fr → 0fr smoothly animates the height
+   * without needing to know the exact pixel height.
+   */
+  .hero-image-wrap {
+    display: grid;
+    grid-template-rows: 1fr;
+    margin-top: var(--space-sm);
+    /* transition: height collapse + opacity fade */
+    transition:
+      grid-template-rows 480ms cubic-bezier(0.4, 0, 0.2, 1),
+      opacity            380ms cubic-bezier(0.4, 0, 0.2, 1),
+      margin-top         480ms cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 1;
+  }
+
+  /* Collapsing state — triggered by JS */
+  .hero-image-wrap.hero-collapsing {
+    grid-template-rows: 0fr;
+    opacity: 0;
+    margin-top: 0;
+  }
+
+  /* Fully gone — no space taken, no pointer events */
+  .hero-image-wrap.hero-gone {
+    display: none;
+  }
+
+  /* Inner div must have overflow:hidden for the grid row trick to work */
+  .hero-image-inner {
+    overflow: hidden;
+    border-radius: 18px;
+    border: 1px solid rgba(124, 58, 237, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  }
+
+  .hero-image {
+    width: 100%;
+    height: 220px;
+    display: block;
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  /* ════════════════════════════════════════════════════════
+     FORM PANELS — smooth fade + slide up entrance
+  ════════════════════════════════════════════════════════ */
+
+  .form-panels-wrap {
+    margin-top: var(--space-sm);
+  }
+
+  .form-panel[hidden] { display: none; }
+
+  /* Each panel animates in when shown */
+  .form-panel {
+    animation: panel-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes panel-in {
+    from {
+      opacity: 0;
+      transform: translateY(22px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* ── Desktop ─────────────────────────────────────────────── */
+  @media (min-width: 431px) {
+    .intake-screen { padding: 0 var(--space-xl) var(--space-xl); }
+    .hero-image-wrap { margin-top: var(--space-md); }
+    .hero-image-inner { border-radius: 22px; }
+    .form-panels-wrap { margin-top: var(--space-md); }
+  }
+</style>

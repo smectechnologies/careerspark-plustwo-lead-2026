@@ -1,0 +1,87 @@
+---
+/**
+ * Logo.astro
+ * Displays the CareerSpark logo at the top-centre of the landing screen.
+ *
+ * Requirements: 2.1, 13.4
+ * - Req 2.1: Display the CareerSpark logo at the top-centre of the first screen.
+ * - Req 13.4: Include alt text on all informational images.
+ *
+ * Uses the public/logo.png asset with a non-empty alt attribute.
+ * Falls back to a styled text logo with gradient colours (#0070BC → #00AA9E)
+ * wrapped in a role="img" container for accessibility.
+ */
+---
+
+<div class="logo-wrapper">
+  <img
+    src="/logo.png"
+    alt="CareerSpark logo"
+    class="logo-image"
+    width="160"
+    height="48"
+    loading="eager"
+  />
+  <span class="logo-text" aria-hidden="true">CareerSpark</span>
+</div>
+
+<style>
+  .logo-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: var(--space-md);
+    padding-bottom: var(--space-xs);
+    width: 100%;
+  }
+
+  .logo-image {
+    display: block;
+    max-width: 160px;
+    height: auto;
+    object-fit: contain;
+  }
+
+  /* Gradient text logo — shown when the image fails to load or as a visual accent */
+  .logo-text {
+    display: none; /* hidden by default; shown via JS if image errors */
+    font-family: var(--font-sans);
+    font-size: var(--font-size-2xl);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: var(--gradient-hero);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    user-select: none;
+  }
+
+  /* ── Desktop: bigger logo ─────────────────────────────────── */
+  @media (min-width: 431px) {
+    .logo-wrapper {
+      padding-top: var(--space-xl);
+      padding-bottom: var(--space-sm);
+    }
+    .logo-image {
+      max-width: 200px;
+    }
+    .logo-text {
+      font-size: var(--font-size-3xl);
+    }
+  }
+</style>
+
+<script>
+  // If the logo image fails to load, show the gradient text fallback
+  const img = document.querySelector<HTMLImageElement>('.logo-image');
+  const text = document.querySelector<HTMLSpanElement>('.logo-text');
+
+  if (img && text) {
+    img.addEventListener('error', () => {
+      img.style.display = 'none';
+      text.style.display = 'block';
+    });
+  }
+</script>

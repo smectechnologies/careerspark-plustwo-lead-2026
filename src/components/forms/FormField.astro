@@ -1,0 +1,76 @@
+---
+/**
+ * FormField.astro
+ * Reusable labelled input/select with inline error display.
+ * Requirements: 3.7, 4.7, 13.1
+ */
+
+interface Props {
+  id: string;
+  label: string;
+  type?: 'text' | 'email' | 'tel' | 'number' | 'select';
+  value?: string;
+  placeholder?: string;
+  error?: string | null;
+  required?: boolean;
+  options?: Array<{ value: string; label: string }>;
+}
+
+const {
+  id,
+  label,
+  type = 'text',
+  value = '',
+  placeholder = '',
+  error = null,
+  required = false,
+  options = [],
+} = Astro.props;
+
+const isSelect = type === 'select';
+const inputClass = isSelect
+  ? `form-select${error ? ' form-select--error' : ''}`
+  : `form-input${error ? ' form-input--error' : ''}`;
+---
+
+<div class="form-field">
+  <label class="form-label" for={id}>
+    {label}{required && <span aria-hidden="true"> *</span>}
+  </label>
+
+  {isSelect ? (
+    <select
+      id={id}
+      name={id}
+      class={inputClass}
+      required={required}
+      aria-required={required ? 'true' : undefined}
+      aria-describedby={`${id}-error`}
+      aria-invalid={error ? 'true' : undefined}
+    >
+      <option value="" disabled selected={!value}>{placeholder || 'Select an option'}</option>
+      {options.map((opt) => (
+        <option value={opt.value} selected={value === opt.value}>
+          {opt.label}
+        </option>
+      ))}
+    </select>
+  ) : (
+    <input
+      id={id}
+      name={id}
+      type={type}
+      class={inputClass}
+      value={value}
+      placeholder={placeholder}
+      required={required}
+      aria-required={required ? 'true' : undefined}
+      aria-describedby={`${id}-error`}
+      aria-invalid={error ? 'true' : undefined}
+    />
+  )}
+
+  <span id={`${id}-error`} role="alert" class="form-error">
+    {error ?? ''}
+  </span>
+</div>

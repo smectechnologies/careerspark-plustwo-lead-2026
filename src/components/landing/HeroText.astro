@@ -1,0 +1,63 @@
+---
+/**
+ * HeroText.astro
+ * Renders the landing screen hero heading and sub-heading.
+ *
+ * Requirements: 2.2, 2.3
+ * - Req 2.2: Display the heading "Discover Your Perfect Career Path".
+ * - Req 2.3: Display the sub-heading "Answer a few questions and get instant course recommendations."
+ */
+---
+
+<div class="hero-text">
+  <h1 class="hero-heading">Discover Your Perfect Career Path</h1>
+  <p class="hero-subheading">
+    Answer a few questions and get instant course recommendations.
+  </p>
+</div>
+
+<style>
+  .hero-text {
+    text-align: center;
+    padding: 0 var(--space-sm);
+    margin-bottom: var(--space-xs);
+  }
+
+  .hero-heading {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-xl);
+    font-weight: 800;
+    line-height: 1.2;
+    background: var(--gradient-hero);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: -0.02em;
+    margin-bottom: 2px;
+  }
+
+  .hero-subheading {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-sm);
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--color-text-muted);
+  }
+
+  /* ── Desktop: bigger text ─────────────────────────────────── */
+  @media (min-width: 431px) {
+    .hero-text {
+      padding: 0 var(--space-lg);
+      margin-bottom: var(--space-sm);
+    }
+    .hero-heading {
+      font-size: var(--font-size-3xl);
+      margin-bottom: var(--space-xs);
+    }
+    .hero-subheading {
+      font-size: var(--font-size-base);
+      line-height: 1.5;
+    }
+  }
+</style>

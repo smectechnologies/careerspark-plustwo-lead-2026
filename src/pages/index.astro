@@ -382,19 +382,22 @@ const gaId       = import.meta.env.PUBLIC_GA_ID;
   .hero-tagline p {
     overflow: hidden;
     margin: 0;
-    padding: 16px 18px;
+    padding: 18px 20px;
     background: rgba(0, 191, 255, 0.06);
-    border: 1px solid rgba(0, 191, 255, 0.18);
+    border: 1px solid rgba(0, 191, 255, 0.20);
     border-radius: 16px;
-    font-size: 0.82rem;
-    line-height: 1.85;
-    color: rgba(232, 244, 255, 0.72);
+    font-size: 0.96rem;
+    line-height: 2;
+    color: rgba(232, 244, 255, 0.90);
     text-align: center;
   }
 
   .hero-tagline p strong {
-    color: var(--color-secondary);
-    font-weight: 700;
+    background: linear-gradient(135deg, #00FFF0 0%, #00BFFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 800;
   }
 
   /* ════════════════════════════════════════════════════════
@@ -429,7 +432,7 @@ const gaId       = import.meta.env.PUBLIC_GA_ID;
     .hero-image-inner     { border-radius: 22px; }
     .hero-image           { height: 240px; }
     .hero-tagline         { margin-top: 16px; }
-    .hero-tagline p       { font-size: 0.9rem; padding: 18px 24px; border-radius: 18px; line-height: 1.9; }
+    .hero-tagline p       { font-size: 1.02rem; padding: 20px 24px; border-radius: 18px; line-height: 2.1; }
     .form-panels-wrap     { margin-top: 24px; }
   }
 </style>

@@ -1,74 +1,77 @@
 ---
-// ResultToggle.astro — compact 3-position neon toggle switch with 3D depth
+// ResultToggle.astro — two stylish neon choice buttons
 ---
 
 <div class="toggle-section">
 
   <p class="toggle-label-text">What's your Plus Two result?</p>
 
-  <div
-    class="switch-track"
-    role="group"
-    aria-label="Select your Plus Two result"
-    id="switch-track"
-    data-state="none"
-  >
-    <!-- 3D sliding thumb -->
-    <span class="switch-thumb" id="switch-thumb" aria-hidden="true"></span>
+  <div class="choice-buttons" role="group" aria-label="Select your Plus Two result">
 
-    <!-- Passed button -->
+    <!-- PASSED button -->
     <button
-      class="switch-option switch-option--passed"
+      class="choice-btn choice-btn--passed"
       id="node-passed"
       type="button"
       aria-pressed="false"
     >
-      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" class="opt-icon">
-        <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="2"
-          stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      Passed
+      <span class="choice-btn__bg" aria-hidden="true"></span>
+      <span class="choice-btn__glow" aria-hidden="true"></span>
+      <span class="choice-btn__content">
+        <span class="choice-btn__icon" aria-hidden="true">
+          <svg viewBox="0 0 22 22" fill="none">
+            <circle cx="11" cy="11" r="9.5" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M6.5 11l3 3 6-6" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="choice-btn__text">
+          <span class="choice-btn__label">Passed</span>
+          <span class="choice-btn__sub">Plus Two Cleared</span>
+        </span>
+      </span>
     </button>
 
-    <!-- Center divider -->
-    <span class="switch-divider" aria-hidden="true">
-      <span class="divider-dot"></span>
-    </span>
-
-    <!-- Not Cleared button -->
+    <!-- NOT CLEARED button -->
     <button
-      class="switch-option switch-option--failed"
+      class="choice-btn choice-btn--failed"
       id="node-failed"
       type="button"
       aria-pressed="false"
     >
-      Not Cleared
-      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" class="opt-icon">
-        <path d="M8 3.5v5M8 11.5v.5" stroke="currentColor" stroke-width="2"
-          stroke-linecap="round"/>
-      </svg>
+      <span class="choice-btn__bg" aria-hidden="true"></span>
+      <span class="choice-btn__glow" aria-hidden="true"></span>
+      <span class="choice-btn__content">
+        <span class="choice-btn__icon" aria-hidden="true">
+          <svg viewBox="0 0 22 22" fill="none">
+            <circle cx="11" cy="11" r="9.5" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M11 7v5M11 15v.5" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="choice-btn__text">
+          <span class="choice-btn__label">Not Cleared</span>
+          <span class="choice-btn__sub">Still a great path ahead</span>
+        </span>
+      </span>
     </button>
-  </div>
 
-  <!-- Status pill -->
-  <span class="switch-status" id="switch-status" aria-live="polite">
-    <span class="status-dot"></span>
-    <span id="status-text">Select your result</span>
-  </span>
+  </div>
 
 </div>
 
 <style>
+  /* ── Section ──────────────────────────────────────────────── */
   .toggle-section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     padding: 8px 0 14px;
   }
 
   .toggle-label-text {
-    font-size: 0.68rem;
+    font-size: 0.7rem;
     font-weight: 700;
     color: var(--color-text-muted);
     letter-spacing: 0.1em;
@@ -76,289 +79,236 @@
     margin: 0;
   }
 
-  /* ══════════════════════════════════════════════
-     TRACK — 3D inset pill
-  ══════════════════════════════════════════════ */
-  .switch-track {
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 280px;
-    height: 36px;
-    border-radius: 9999px;
-    padding: 3px;
-    /* deep purple-violet glass */
-    background: linear-gradient(180deg, #1A0A3A 0%, #2D1060 100%);
-    border: 1.5px solid rgba(160, 80, 255, 0.50);
-    box-shadow:
-      /* deep inset — track is sunken INTO the screen */
-      inset 0 3px 10px rgba(0, 0, 0, 0.70),
-      inset 0 1px 3px rgba(0, 0, 0, 0.90),
-      inset 0 -1px 0 rgba(255, 255, 255, 0.04),
-      /* outer raised edge highlight */
-      0 1px 0 rgba(255, 255, 255, 0.08),
-      0 0 14px rgba(120, 40, 220, 0.22);
-    transition: border-color 300ms ease, box-shadow 300ms ease;
-    overflow: hidden;
+  /* ── Button grid ──────────────────────────────────────────── */
+  .choice-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
   }
 
-  /* track border glow on active */
-  .switch-track[data-state="passed"] {
-    border-color: rgba(0, 255, 240, 0.70);
-    box-shadow:
-      inset 0 2px 6px rgba(0, 0, 0, 0.50),
-      inset 0 1px 0 rgba(0, 255, 240, 0.14),
-      0 0 20px rgba(0, 255, 240, 0.32);
-  }
+/* ── Base button ──────────────────────────────────────────── */
+.choice-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 4px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(255, 255, 255, 0.10);
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  overflow: hidden;
+  transition:
+    transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 250ms ease,
+    box-shadow 250ms ease;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+   
+/* Not active state */
+.choice-btn[aria-pressed="false"] {
+  opacity: 0.7;
+}
 
-  .switch-track[data-state="failed"] {
-    border-color: rgba(255, 165, 0, 0.70);
-    box-shadow:
-      inset 0 2px 6px rgba(0, 0, 0, 0.50),
-      inset 0 1px 0 rgba(255, 165, 0, 0.14),
-      0 0 20px rgba(255, 165, 0, 0.32);
-  }
+.choice-btn[aria-pressed="false"] .choice-btn__bg {
+  background: linear-gradient(160deg, rgba(0, 191, 255, 0.774) 0%, rgba(168, 255, 114, 0.842) 100%);
+}
 
-  /* ══════════════════════════════════════════════
-     THUMB — raised 3D pill
-  ══════════════════════════════════════════════ */
-  .switch-thumb {
-    position: absolute;
-    top: 3px;
-    left: calc(50% - 15px);
-    width: 30px;
-    height: 28px;
-    border-radius: 9999px;
-    z-index: 2;
-    pointer-events: none;
-    /* default: bright cyan raised pill */
-    background: linear-gradient(160deg, #80FFEE 0%, #00E5D4 40%, #00BFFF 100%);
-    border: 1px solid rgba(0, 255, 240, 0.9);
-    /* deep multi-layer shadow = projects out of screen */
-    box-shadow:
-      /* top highlight — light source from above */
-      inset 0 2px 3px rgba(255, 255, 255, 0.55),
-      /* bottom inner shadow — depth */
-      inset 0 -2px 4px rgba(0, 100, 140, 0.40),
-      /* close drop shadow */
-      0 4px 6px rgba(0, 0, 0, 0.55),
-      /* mid drop shadow */
-      0 8px 16px rgba(0, 0, 0, 0.40),
-      /* far ambient shadow */
-      0 14px 28px rgba(0, 0, 0, 0.25),
-      /* neon glow */
-      0 0 12px rgba(0, 255, 240, 0.60),
-      0 0 28px rgba(0, 255, 240, 0.25);
-    transition:
-      left 360ms cubic-bezier(0.34, 1.45, 0.64, 1),
-      background 300ms ease,
-      border-color 300ms ease,
-      box-shadow 300ms ease,
-      transform 300ms ease;
-  }
-
-  /* thumb → PASSED (left) — electric blue projected */
-  .switch-track[data-state="passed"] .switch-thumb {
-    left: 3px;
-    background: linear-gradient(160deg, #80E8FF 0%, #00C8FF 40%, #0090CC 100%);
-    border-color: #00CFFF;
-    transform: translateY(-2px) scale(1.06);
-    box-shadow:
-      inset 0 2px 3px rgba(255, 255, 255, 0.55),
-      inset 0 -2px 4px rgba(0, 60, 120, 0.40),
-      0 6px 10px rgba(0, 0, 0, 0.55),
-      0 12px 24px rgba(0, 0, 0, 0.35),
-      0 20px 40px rgba(0, 0, 0, 0.20),
-      0 0 16px rgba(0, 191, 255, 0.80),
-      0 0 36px rgba(0, 191, 255, 0.35);
-  }
-
-  /* thumb → NOT CLEARED (right) — amber projected */
-  .switch-track[data-state="failed"] .switch-thumb {
-    left: calc(100% - 33px);
-    background: linear-gradient(160deg, #FFE880 0%, #FFB800 40%, #E07000 100%);
-    border-color: #FFB800;
-    transform: translateY(-2px) scale(1.06);
-    box-shadow:
-      inset 0 2px 3px rgba(255, 255, 255, 0.55),
-      inset 0 -2px 4px rgba(140, 60, 0, 0.40),
-      0 6px 10px rgba(0, 0, 0, 0.55),
-      0 12px 24px rgba(0, 0, 0, 0.35),
-      0 20px 40px rgba(0, 0, 0, 0.20),
-      0 0 16px rgba(255, 165, 0, 0.80),
-      0 0 36px rgba(255, 165, 0, 0.35);
-  }
-
-  /* ══════════════════════════════════════════════
-     OPTION BUTTONS
-  ══════════════════════════════════════════════ */
-  .switch-option {
-    position: relative;
-    z-index: 3;
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    height: 100%;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    font-family: var(--font-sans);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    color: rgba(255,255,255,0.35);
-    border-radius: 9999px;
-    padding: 0 4px;
-    transition: color 280ms ease, text-shadow 280ms ease;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-  }
-
-  .switch-option:focus-visible {
+  .choice-btn:focus-visible {
     outline: 2px solid var(--color-secondary);
-    outline-offset: 2px;
+    outline-offset: 3px;
   }
-  .switch-option:focus:not(:focus-visible) { outline: none; }
+  .choice-btn:focus:not(:focus-visible) { outline: none; }
 
-  .opt-icon {
-    width: 12px;
-    height: 12px;
-    flex-shrink: 0;
-  }
-
-  /* active label colours */
-  .switch-track[data-state="passed"] .switch-option--passed {
-    color: #fff;
-    text-shadow: 0 0 10px rgba(0, 191, 255, 1), 0 0 20px rgba(0, 191, 255, 0.6);
-  }
-
-  .switch-track[data-state="failed"] .switch-option--failed {
-    color: #fff;
-    text-shadow: 0 0 10px rgba(255, 165, 0, 1), 0 0 20px rgba(255, 165, 0, 0.6);
+  /* dark glass background layer */
+  .choice-btn__bg {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(160deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: background 250ms ease;
   }
 
-  /* ── Center divider ───────────────────────────────────────── */
-  .switch-divider {
-    position: relative;
-    z-index: 3;
-    width: 20px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  /* glow layer — hidden until active */
+  .choice-btn__glow {
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 300ms ease;
     pointer-events: none;
   }
 
-  .divider-dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.18);
-    box-shadow: 0 0 4px rgba(255,255,255,0.1);
-    transition: opacity 250ms ease;
+  /* content row */
+  .choice-btn__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 
-  .switch-track[data-state="passed"] .divider-dot,
-  .switch-track[data-state="failed"] .divider-dot {
-    opacity: 0;
+/* icon circle */
+.choice-btn__icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(255, 255, 255);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  color: var(--color-text-muted);
+  transition: background 250ms ease, border-color 250ms ease,
+              color 250ms ease, box-shadow 250ms ease;
+}
+
+.choice-btn__icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* text stack */
+   .choice-btn__text {
+     display: flex;
+     flex-direction: column;
+     align-items: flex-start;
+     gap: 2px;
+   }
+
+   .choice-btn__label {
+     font-size: 0.8rem;
+     font-weight: 800;
+     letter-spacing: 0.01em;
+     color: rgb(255, 255, 255);
+     line-height: 1;
+     transition: color 250ms ease, text-shadow 250ms ease;
+   }
+
+   .choice-btn__sub {
+     font-size: 0.56rem;
+     font-weight: 500;
+     letter-spacing: 0.03em;
+     color: rgb(255, 255, 255);
+     line-height: 1.2;
+     transition: color 250ms ease;
+   }
+
+  /* hover — both buttons */
+  .choice-btn:hover {
+    transform: translateY(-2px) scale(1.02);
+  }
+
+  .choice-btn:hover .choice-btn__bg {
+    background: linear-gradient(160deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.04) 100%);
   }
 
   /* ══════════════════════════════════════════════
-     STATUS PILL
+     PASSED — active  (#00FFF0 cyan)
   ══════════════════════════════════════════════ */
-  .switch-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 12px 4px 8px;
-    border-radius: 9999px;
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    color: var(--color-text-muted);
-    transition: background 280ms ease, border-color 280ms ease, color 280ms ease;
+  .choice-btn--passed[aria-pressed="true"] {
+    border-color: #00FFF0;
+    transform: translateY(-3px) scale(1.03);
+    box-shadow:
+      0 0 0 1px rgba(0, 255, 240, 0.40),
+      0 8px 24px rgba(0, 255, 240, 0.20),
+      0 2px 8px rgba(0, 0, 0, 0.40);
   }
 
-  .status-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--color-text-muted);
-    flex-shrink: 0;
-    transition: background 280ms ease, box-shadow 280ms ease;
+  .choice-btn--passed[aria-pressed="true"] .choice-btn__bg {
+    background: linear-gradient(160deg, rgba(0,255,240,0.14) 0%, rgba(0,191,255,0.06) 100%);
   }
 
-  /* status — passed */
-  .switch-track[data-state="passed"] ~ .switch-status {
-    background: rgba(0, 191, 255, 0.10);
-    border-color: rgba(0, 191, 255, 0.40);
-    color: #00BFFF;
-  }
-  .switch-track[data-state="passed"] ~ .switch-status .status-dot {
-    background: #00BFFF;
-    box-shadow: 0 0 6px rgba(0, 191, 255, 1), 0 0 12px rgba(0, 191, 255, 0.5);
-    animation: dot-ping 1.4s ease-out infinite;
+  .choice-btn--passed[aria-pressed="true"] .choice-btn__glow {
+    background: radial-gradient(ellipse at 50% 0%, rgba(0,255,240,0.22) 0%, transparent 65%);
+    opacity: 1;
   }
 
-  /* status — failed */
-  .switch-track[data-state="failed"] ~ .switch-status {
-    background: rgba(255, 165, 0, 0.10);
-    border-color: rgba(255, 165, 0, 0.40);
-    color: #FFA500;
-  }
-  .switch-track[data-state="failed"] ~ .switch-status .status-dot {
-    background: #FFA500;
-    box-shadow: 0 0 6px rgba(255, 165, 0, 1), 0 0 12px rgba(255, 165, 0, 0.5);
-    animation: dot-ping 1.4s ease-out infinite;
+  .choice-btn--passed[aria-pressed="true"] .choice-btn__icon {
+    background: rgba(0, 255, 240, 0.18);
+    border-color: rgba(0, 255, 240, 0.55);
+    color: #00FFF0;
+    box-shadow: 0 0 14px rgba(0, 255, 240, 0.50);
   }
 
-  @keyframes dot-ping {
-    0%   { transform: scale(1);   opacity: 1; }
-    60%  { transform: scale(1.8); opacity: 0.4; }
-    100% { transform: scale(1);   opacity: 1; }
+  .choice-btn--passed[aria-pressed="true"] .choice-btn__label {
+    color: #00FFF0;
+    text-shadow: 0 0 12px rgba(0, 255, 240, 0.80);
   }
 
-  /* ── Desktop ──────────────────────────────────────────────── */
-  @media (min-width: 431px) {
-    .toggle-section    { gap: 12px; padding: 12px 0 18px; }
-    .toggle-label-text { font-size: 0.72rem; }
-    .switch-track      { width: 300px; height: 40px; padding: 4px; }
-    .switch-thumb      { width: 34px; height: 30px; top: 4px; }
-    .switch-track[data-state="passed"] .switch-thumb  { left: 4px; }
-    .switch-track[data-state="failed"] .switch-thumb  { left: calc(100% - 38px); }
-    .switch-option     { font-size: 0.76rem; gap: 5px; }
-    .opt-icon          { width: 13px; height: 13px; }
+  .choice-btn--passed[aria-pressed="true"] .choice-btn__sub {
+    color: rgba(0, 255, 240, 0.70);
   }
+
+  /* ══════════════════════════════════════════════
+     NOT CLEARED — active  (#FFB800 amber)
+  ══════════════════════════════════════════════ */
+  .choice-btn--failed[aria-pressed="true"] {
+    border-color: #FFB800;
+    transform: translateY(-3px) scale(1.03);
+    box-shadow:
+      0 0 0 1px rgba(255, 184, 0, 0.40),
+      0 8px 24px rgba(255, 184, 0, 0.20),
+      0 2px 8px rgba(0, 0, 0, 0.40);
+  }
+
+  .choice-btn--failed[aria-pressed="true"] .choice-btn__bg {
+    background: linear-gradient(160deg, rgba(255,184,0,0.14) 0%, rgba(255,120,0,0.06) 100%);
+  }
+
+  .choice-btn--failed[aria-pressed="true"] .choice-btn__glow {
+    background: radial-gradient(ellipse at 50% 0%, rgba(255,184,0,0.22) 0%, transparent 65%);
+    opacity: 1;
+  }
+
+  .choice-btn--failed[aria-pressed="true"] .choice-btn__icon {
+    background: rgba(255, 184, 0, 0.18);
+    border-color: rgba(255, 184, 0, 0.55);
+    color: #FFB800;
+    box-shadow: 0 0 14px rgba(255, 184, 0, 0.50);
+  }
+
+  .choice-btn--failed[aria-pressed="true"] .choice-btn__label {
+    color: #FFB800;
+    text-shadow: 0 0 12px rgba(255, 184, 0, 0.80);
+  }
+
+  .choice-btn--failed[aria-pressed="true"] .choice-btn__sub {
+    color: rgba(255, 184, 0, 0.70);
+  }
+
+/* ── Desktop ──────────────────────────────────────────────── */
+@media (min-width: 431px) {
+  .toggle-section    { gap: 14px; padding: 12px 0 18px; }
+  .toggle-label-text { font-size: 0.74rem; }
+  .choice-buttons    { gap: 12px; }
+  .choice-btn        { padding: 10px 8px; border-radius: 14px; }
+  .choice-btn__icon  { width: 32px; height: 32px; }
+  .choice-btn__icon svg { width: 16px; height: 16px; }
+  .choice-btn__label { font-size: 0.88rem; }
+  .choice-btn__sub   { font-size: 0.6rem; }
+}
 </style>
 
 <script>
-  const track      = document.getElementById('switch-track')  as HTMLElement | null;
-  const nodePassed = document.getElementById('node-passed')   as HTMLButtonElement | null;
-  const nodeFailed = document.getElementById('node-failed')   as HTMLButtonElement | null;
-  const statusText = document.getElementById('status-text')   as HTMLElement | null;
+  const nodePassed = document.getElementById('node-passed') as HTMLButtonElement | null;
+  const nodeFailed = document.getElementById('node-failed') as HTMLButtonElement | null;
 
   type State = 'none' | 'passed' | 'failed';
   let current: State = 'none';
-
-  const LABELS: Record<State, string> = {
-    none:   'Select your result',
-    passed: 'Plus Two Passed',
-    failed: 'Not Cleared',
-  };
 
   function setState(next: State): void {
     if (next === current) next = 'none';
     current = next;
 
-    if (track) track.dataset.state = next;
     nodePassed?.setAttribute('aria-pressed', String(next === 'passed'));
     nodeFailed?.setAttribute('aria-pressed', String(next === 'failed'));
-    if (statusText) statusText.textContent = LABELS[next];
 
     window.dispatchEvent(
       new CustomEvent('result-toggle-change', { detail: next, bubbles: true })

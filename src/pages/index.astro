@@ -9,6 +9,10 @@ import PassedForm from '../components/forms/PassedForm.astro';
 import FailedForm from '../components/forms/FailedForm.astro';
 import SuccessScreen from '../components/recommendations/SuccessScreen.astro';
 import InstallPrompt from '../components/pwa/InstallPrompt.astro';
+
+const clarityId  = import.meta.env.PUBLIC_CLARITY_ID;
+const pixelId    = import.meta.env.PUBLIC_FB_PIXEL_ID;
+const gaId       = import.meta.env.PUBLIC_GA_ID;
 ---
 
 <html lang="en">
@@ -18,15 +22,30 @@ import InstallPrompt from '../components/pwa/InstallPrompt.astro';
     <meta name="generator" content={Astro.generator} />
 
     <!-- Primary Meta -->
-    <title>CareerSpark – Discover Your Perfect Career Path</title>
-    <meta name="description" content="Answer a few questions about your Plus Two results and get instant personalised course recommendations from CareerSpark." />
+    <title>CareerSpark – Plus Two Passed or Not Cleared? Find Your Best Course Now</title>
+    <meta name="description" content="CareerSpark helps Plus Two students discover the best courses based on their marks and subjects. Know which course to choose, how fast you can get a job, and what salary to expect — instantly." />
+    <meta name="keywords" content="plus two course finder, career after plus two, course recommendations Kerala, plus two passed courses, plus two not cleared options, career guidance students" />
+    <meta name="author" content="CareerSpark" />
+    <meta name="robots" content="index, follow" />
 
-    <!-- Open Graph -->
+    <!-- Open Graph (Facebook / WhatsApp / LinkedIn) -->
     <meta property="og:type"        content="website" />
-    <meta property="og:title"       content="CareerSpark – Discover Your Perfect Career Path" />
-    <meta property="og:description" content="Answer a few questions about your Plus Two results and get instant personalised course recommendations." />
-    <meta property="og:image"       content="/icons/icon-512x512.png" />
+    <meta property="og:site_name"   content="CareerSpark" />
+    <meta property="og:title"       content="CareerSpark – Find Your Perfect Course After Plus Two" />
+    <meta property="og:description" content="Passed or not cleared? Enter your marks and subjects — CareerSpark instantly shows the best courses for you, how soon you can get a job, and your expected starting salary." />
+    <meta property="og:image"       content="/logo.png" />
+    <meta property="og:image:width"  content="512" />
+    <meta property="og:image:height" content="512" />
+    <meta property="og:image:alt"   content="CareerSpark logo" />
     <meta property="og:url"         content={Astro.url.href} />
+    <meta property="og:locale"      content="en_IN" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card"        content="summary" />
+    <meta name="twitter:title"       content="CareerSpark – Find Your Perfect Course After Plus Two" />
+    <meta name="twitter:description" content="Passed or not cleared? Get instant personalised course recommendations based on your Plus Two marks and subjects." />
+    <meta name="twitter:image"       content="/logo.png" />
+    <meta name="twitter:image:alt"   content="CareerSpark logo" />
 
     <!-- Canonical -->
     <link rel="canonical" href={Astro.url.href} />
@@ -38,12 +57,23 @@ import InstallPrompt from '../components/pwa/InstallPrompt.astro';
 
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.webmanifest" />
-    <meta name="theme-color" content="#0A0A0F" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#F5F3FF" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#081229" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#081229" media="(prefers-color-scheme: light)" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="CareerSpark" />
+
+    <!-- Microsoft Clarity -->
+    {clarityId && clarityId !== 'YOUR_CLARITY_PROJECT_ID' && (
+      <script is:inline define:vars={{ clarityId }}>
+        (function(c,l,a,r,i,t,y){
+          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window,document,"clarity","script",clarityId);
+      </script>
+    )}
   </head>
   <body>
     <div id="app-loader" class="app-loader" role="status" aria-live="polite">
@@ -75,6 +105,19 @@ import InstallPrompt from '../components/pwa/InstallPrompt.astro';
             </div>
           </div>
 
+          <!-- Malayalam tagline — collapses with hero image -->
+          <div id="hero-tagline" class="hero-tagline" lang="ml">
+            <p>
+              നിങ്ങളുടെ മാർക്ക്, പഠിച്ച സബ്ജക്ട്സ് തുടങ്ങിയ വിവരങ്ങൾ വച്ച്
+              <strong>നിങ്ങൾക്കിനി ഏതൊക്കെ കോഴ്സ് തിരഞ്ഞെടുക്കാം</strong>,
+              പഠിച്ചു കഴിഞ്ഞാൽ
+              <strong>എത്രനാൾ കൊണ്ട് ജോലി നേടാം</strong>,
+              തുടക്കത്തിൽ
+              <strong>എത്ര ശമ്പളം കിട്ടും</strong>
+              എന്നൊക്കെ കൃത്യമായി മനസ്സിലാക്കാം.
+            </p>
+          </div>
+
           <div id="form-panels-wrap" class="form-panels-wrap">
             <div class="form-panels">
               <div id="passed-panel" class="form-panel" hidden>
@@ -93,22 +136,34 @@ import InstallPrompt from '../components/pwa/InstallPrompt.astro';
       <InstallPrompt />
     </MobileShell>
 
-    <script is:inline>
-      !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f['_fbq'])f['_fbq']=n;
-      n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-      t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
-      (window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
-      fbq('init', 'CAREERSPARK_PIXEL_ID');
-      fbq('track', 'PageView');
-    </script>
-    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-CAREERSPARK"></script>
-    <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-CAREERSPARK');
-    </script>
+    <!-- Facebook Pixel -->
+    {pixelId && pixelId !== 'YOUR_FB_PIXEL_ID' && (
+      <script is:inline define:vars={{ pixelId }}>
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f['_fbq'])f['_fbq']=n;
+        n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
+        (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', pixelId);
+        fbq('track', 'PageView');
+      </script>
+    )}
+
+    <!-- Google Analytics -->
+    {gaId && gaId !== 'YOUR_GA_ID' && (
+      <script is:inline define:vars={{ gaId }}>
+        (function(){
+          var s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
+          document.head.appendChild(s);
+        })();
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', gaId);
+      </script>
+    )}
 
     <script>
       import { captureUtmParams } from '../lib/utmTracker';
@@ -120,6 +175,7 @@ import InstallPrompt from '../components/pwa/InstallPrompt.astro';
       const resultToggle   = document.querySelector<HTMLElement>('.toggle-section');
       const loader         = document.getElementById('app-loader')      as HTMLDivElement | null;
       const heroWrap       = document.getElementById('hero-image-wrap') as HTMLDivElement | null;
+      const heroTagline    = document.getElementById('hero-tagline')    as HTMLDivElement | null;
       const formPanelsWrap = document.getElementById('form-panels-wrap') as HTMLDivElement | null;
 
       captureUtmParams(new URL(window.location.href));
@@ -130,10 +186,15 @@ import InstallPrompt from '../components/pwa/InstallPrompt.astro';
         if (!heroWrap || !heroVisible) return;
         heroVisible = false;
         heroWrap.classList.add('hero-collapsing');
+        if (heroTagline) heroTagline.classList.add('hero-collapsing');
         // After transition ends, fully remove from flow
         heroWrap.addEventListener('transitionend', () => {
           heroWrap.classList.add('hero-gone');
           heroWrap.classList.remove('hero-collapsing');
+          if (heroTagline) {
+            heroTagline.classList.add('hero-gone');
+            heroTagline.classList.remove('hero-collapsing');
+          }
         }, { once: true });
       }
 
@@ -141,9 +202,11 @@ import InstallPrompt from '../components/pwa/InstallPrompt.astro';
         if (!heroWrap || heroVisible) return;
         heroVisible = true;
         heroWrap.classList.remove('hero-gone');
+        if (heroTagline) heroTagline.classList.remove('hero-gone');
         // Force reflow so transition plays from collapsed state
         void heroWrap.offsetHeight;
         heroWrap.classList.remove('hero-collapsing');
+        if (heroTagline) heroTagline.classList.remove('hero-collapsing');
       }
 
       function showPanel(panel: HTMLDivElement): void {
@@ -246,7 +309,7 @@ import InstallPrompt from '../components/pwa/InstallPrompt.astro';
     position: relative;
     z-index: 1;
     min-height: 100%;
-    padding: 0 var(--space-md) var(--space-lg);
+    padding: 0 20px 48px;   /* mobile: 20px sides, 48px bottom */
   }
 
   .intake-screen[hidden] { display: none; }
@@ -255,16 +318,10 @@ import InstallPrompt from '../components/pwa/InstallPrompt.astro';
      HERO IMAGE — smooth height collapse + fade out
   ════════════════════════════════════════════════════════ */
 
-  /*
-   * Outer wrapper uses display:grid with grid-template-rows.
-   * Collapsing from 1fr → 0fr smoothly animates the height
-   * without needing to know the exact pixel height.
-   */
   .hero-image-wrap {
     display: grid;
     grid-template-rows: 1fr;
-    margin-top: var(--space-sm);
-    /* transition: height collapse + opacity fade */
+    margin-top: 18px;
     transition:
       grid-template-rows 480ms cubic-bezier(0.4, 0, 0.2, 1),
       opacity            380ms cubic-bezier(0.4, 0, 0.2, 1),
@@ -272,32 +329,72 @@ import InstallPrompt from '../components/pwa/InstallPrompt.astro';
     opacity: 1;
   }
 
-  /* Collapsing state — triggered by JS */
   .hero-image-wrap.hero-collapsing {
     grid-template-rows: 0fr;
     opacity: 0;
     margin-top: 0;
   }
 
-  /* Fully gone — no space taken, no pointer events */
   .hero-image-wrap.hero-gone {
     display: none;
   }
 
-  /* Inner div must have overflow:hidden for the grid row trick to work */
   .hero-image-inner {
     overflow: hidden;
     border-radius: 18px;
-    border: 1px solid rgba(124, 58, 237, 0.3);
+    border: 1px solid rgba(0, 191, 255, 0.25);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
   }
 
   .hero-image {
     width: 100%;
-    height: 220px;
+    height: 210px;
     display: block;
     object-fit: cover;
     object-position: center top;
+  }
+
+  /* ════════════════════════════════════════════════════════
+     MALAYALAM TAGLINE — collapses with hero image
+  ════════════════════════════════════════════════════════ */
+
+  .hero-tagline {
+    display: grid;
+    grid-template-rows: 1fr;
+    margin-top: 14px;
+    transition:
+      grid-template-rows 480ms cubic-bezier(0.4, 0, 0.2, 1),
+      opacity            380ms cubic-bezier(0.4, 0, 0.2, 1),
+      margin-top         480ms cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 1;
+  }
+
+  .hero-tagline.hero-collapsing {
+    grid-template-rows: 0fr;
+    opacity: 0;
+    margin-top: 0;
+  }
+
+  .hero-tagline.hero-gone {
+    display: none;
+  }
+
+  .hero-tagline p {
+    overflow: hidden;
+    margin: 0;
+    padding: 16px 18px;
+    background: rgba(0, 191, 255, 0.06);
+    border: 1px solid rgba(0, 191, 255, 0.18);
+    border-radius: 16px;
+    font-size: 0.82rem;
+    line-height: 1.85;
+    color: rgba(232, 244, 255, 0.72);
+    text-align: center;
+  }
+
+  .hero-tagline p strong {
+    color: var(--color-secondary);
+    font-weight: 700;
   }
 
   /* ════════════════════════════════════════════════════════
@@ -305,12 +402,11 @@ import InstallPrompt from '../components/pwa/InstallPrompt.astro';
   ════════════════════════════════════════════════════════ */
 
   .form-panels-wrap {
-    margin-top: var(--space-sm);
+    margin-top: 18px;
   }
 
   .form-panel[hidden] { display: none; }
 
-  /* Each panel animates in when shown */
   .form-panel {
     animation: panel-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
@@ -326,11 +422,14 @@ import InstallPrompt from '../components/pwa/InstallPrompt.astro';
     }
   }
 
-  /* ── Desktop ─────────────────────────────────────────────── */
+  /* ── Desktop (> 430px) ───────────────────────────────────── */
   @media (min-width: 431px) {
-    .intake-screen { padding: 0 var(--space-xl) var(--space-xl); }
-    .hero-image-wrap { margin-top: var(--space-md); }
-    .hero-image-inner { border-radius: 22px; }
-    .form-panels-wrap { margin-top: var(--space-md); }
+    .intake-screen        { padding: 0 32px 56px; }
+    .hero-image-wrap      { margin-top: 24px; }
+    .hero-image-inner     { border-radius: 22px; }
+    .hero-image           { height: 240px; }
+    .hero-tagline         { margin-top: 16px; }
+    .hero-tagline p       { font-size: 0.9rem; padding: 18px 24px; border-radius: 18px; line-height: 1.9; }
+    .form-panels-wrap     { margin-top: 24px; }
   }
 </style>

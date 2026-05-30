@@ -31,8 +31,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding-top: var(--space-md);
-    padding-bottom: var(--space-xs);
+    padding-top: 36px;
+    padding-bottom: 10px;
     width: 100%;
   }
 
@@ -43,9 +43,8 @@
     object-fit: contain;
   }
 
-  /* Gradient text logo — shown when the image fails to load or as a visual accent */
   .logo-text {
-    display: none; /* hidden by default; shown via JS if image errors */
+    display: none;
     font-family: var(--font-sans);
     font-size: var(--font-size-2xl);
     font-weight: 800;
@@ -58,14 +57,13 @@
     user-select: none;
   }
 
-  /* ── Desktop: bigger logo ─────────────────────────────────── */
   @media (min-width: 431px) {
     .logo-wrapper {
-      padding-top: var(--space-xl);
-      padding-bottom: var(--space-sm);
+      padding-top: 48px;
+      padding-bottom: 14px;
     }
     .logo-image {
-      max-width: 200px;
+      max-width: 190px;
     }
     .logo-text {
       font-size: var(--font-size-3xl);
